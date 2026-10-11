@@ -1,0 +1,34 @@
+services:
+  olx-tiktok-bot:
+    build: .
+    image: olx-tiktok-bot:latest
+    container_name: olx-tiktok-bot
+    restart: unless-stopped          # crash / watchdog exit / server reboot -> started again
+    init: true                       # proper signal handling (SIGTERM -> clean stop)
+    env_file: .env
+    environment:
+      DATA_DIR: /data
+    volumes:
+      - ./data:/data                 # SQLite DB, heartbeat, temp slides
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 1.0
+    stop_grace_period: 30s
+    healthcheck:                     # heartbeat file must be younger than 20 min (same as in the Dockerfile)
+      test: ["CMD", "python", "-c", "import os,sys,time; p='/data/heartbeat'; sys.exit(0 if os.path.exists(p) and time.time()-os.path.getmtime(p) < 1200 else 1)"]
+      interval: 2m
+      timeout: 10s
+      start_period: 5m
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # No ports: the bot only makes outgoing requests (Telegram long polling, OLX, Otodom, tiktok-connect).
+    networks:
+      - n8n_default                  # reaches http://tiktok-connect:8090 (TikTok drafts)
+
+networks:
+  n8n_default:
+    external: true

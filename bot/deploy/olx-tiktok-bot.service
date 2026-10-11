@@ -1,0 +1,35 @@
+# Alternative to Docker (not needed when using docker compose).
+# Install: copy the project to /opt/olx-tiktok-bot, create venv /opt/olx-tiktok-bot/.venv with requirements,
+# put the env file at /etc/olx-tiktok-bot.env (chmod 600), then:
+#   systemctl daemon-reload && systemctl enable --now olx-tiktok-bot
+[Unit]
+Description=OLX + Otodom -> Telegram bot (Wroclaw rentals) with TikTok slides
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=notify
+NotifyAccess=main
+WorkingDirectory=/opt/olx-tiktok-bot
+ExecStart=/opt/olx-tiktok-bot/.venv/bin/python -m olxbot
+EnvironmentFile=/etc/olx-tiktok-bot.env
+Environment=DATA_DIR=/var/lib/olx-tiktok-bot
+Environment=PYTHONUNBUFFERED=1
+StateDirectory=olx-tiktok-bot
+DynamicUser=yes
+Restart=always
+RestartSec=15
+# the process pings the watchdog only while all its threads make progress
+WatchdogSec=1200
+TimeoutStartSec=120
+# 78 = bad token / config: endless restarts would not help
+RestartPreventExitStatus=78
+MemoryMax=256M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

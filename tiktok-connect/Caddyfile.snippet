@@ -1,0 +1,14 @@
+
+# --- tiktok-connect (Listing Publisher) ---
+media.example.com {
+	encode zstd gzip
+	request_body {
+		max_size 64KB
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+	respond /internal/* 404
+	reverse_proxy tiktok-connect:8090
+}

@@ -1,0 +1,2444 @@
+# Wrocław street names (proper part), source: OpenStreetMap contributors, ODbL. Rebuild: tools/build_streets.py
+Adama Asnyka
+Adama Gdacjusza
+Adama Jerzego Czartoryskiego
+Adama Kopycińskiego
+Adama Mickiewicza
+Adama Uznańskiego
+Admirała Józefa Unruga
+Adolfa Dygasińskiego
+Ady Sari
+Afgańska
+Agatowa
+Agrestowa
+Akacjowa
+Aleja Absolwentów
+Aleja Azaliowa
+Aleja Bratkowa
+Aleja Fiołkowa
+Aleja Fiołków
+Aleja Krokusowa
+Aleja Liliowa
+Aleja Narcyzowa
+Aleja Piastów
+Aleja Profesorów
+Aleja Straży Akademickiej
+Aleja Szarotkowa
+Aleja Tulipanowa
+Alejka Bajkowa
+Alejka Bratkowa
+Alejka Bzowa
+Alejka Gożdzikowa
+Alejka Gruszkowa
+Alejka Kręta
+Alejka Liliowa
+Alejka Lipowa
+Alejka Miedziana
+Alejka Spacerowa
+Alejka Słoneczna
+Alejka Wiśniowa
+Alejka Śliwkowa
+Alejka Świętego Andrzeja Apostoła
+Aleksandra Brücknera
+Aleksandra Godlewskiego
+Aleksandra Hercena
+Aleksandra Kosiby
+Aleksandra Kotsisa
+Aleksandra Orłowskiego
+Aleksandra Ostrowskiego
+Aleksandra Szniolisa
+Aleksandra Zelwerowicza
+Aleksandra hrabiego Fredry
+Aleksandra Świętochowskiego
+Alfreda Jahna
+Alfreda Nobla
+Aliancka
+Aliny Bolechowskiej
+Alojzego Majchra
+Alpejska
+Altanowa
+Amarantowa
+Ameriga Vespucciego
+Ametystowa
+Ananasowa
+Andrzeja Cinciały
+Andrzeja Frycza-Modrzewskiego
+Andrzeja Frydeckiego
+Andrzeja Klisieckiego
+Andrzeja Kmicica
+Andrzeja Małkowskiego
+Andrzeja Potebni
+Andrzeja Struga
+Andrzeja Wajdy
+Andrzeja Waligórskiego
+Angielska
+Anioła Ślązaka
+Anny Jasińskiej
+Anny Walentynowicz
+Antonia Vivaldiego
+Antoniego Cieszyńskiego
+Antoniego Czechowa
+Antoniego Knota
+Antoniego Słonimskiego
+Antoniego Wiwulskiego
+Anyżowa
+Aptekarska
+Arabska
+Arachidowa
+Arbuzowa
+Archeologów
+Architektów
+Armeńska
+Armii Krajowej
+Aroniowa
+Arrasowa
+Artura Grottgera
+Artura Młodnickiego
+Artura Oppmana
+Artyleryjska
+Asfaltowa
+Astrowa
+Astrów
+Augusta Cieszkowskiego
+Augusta Mosbacha
+Augustowska
+Augustyna Kośnego
+Australijska
+Austriacka
+Azaliowa
+Ałunowa
+Babiego Lata
+Babimojska
+Babiogórska
+Bagatela
+Bagienna
+Bakaliowa
+Balladyny
+Balonowa
+Barani Skok
+Baranowicka
+Barbary Folty
+Barbary Hesse-Bukowskiej
+Barbary Kostrzewskiej
+Bardzka
+Bartnicza
+Bartosza Głowackiego
+Bartoszowicka
+Bartłomieja Strachowskiego
+Barwinkowa
+Barycka
+Basi Wołodyjowskiej
+Baskijska
+Bazaltowa
+Bazyliowa
+Bałkańska
+Bałtycka
+Bażancia
+Beaty Artemskiej
+Bednarska
+Belgijska
+Belgradzka
+Beli Bartoka
+Belwederczyków
+Benedykta Polaka
+Benedyktyńska
+Bengalska
+Berberysowa
+Bernarda Belotta Canaletta
+Bernarda Pretficza
+Bernardyńska
+Beskidzka
+Bezpieczna
+Beżowa
+Biała
+Białej Magnolii
+Białkowska
+Białodrzewna
+Białogardzka
+Białoruska
+Białoskórnicza
+Białostocka
+Białowieska
+Biały Kąt
+Białych Goździków
+Białych Tygrysów
+Biegła
+Bielawska
+Bierdzańska
+Bierutowska
+Bierzycka
+Bieszczadzka
+Birmańska
+Biskupa Bernarda Bogedaina
+Biskupa Ignacego Krasickiego
+Biskupa Tomasza Pierwszego
+Biskupia
+Biwakowa
+Biłgorajska
+Blacharska
+Bliska
+Blizanowicka
+Bliźniacza
+Bluszczowa
+Bobrza
+Bobrzańska
+Bocheńska
+Bociania
+Boczna
+Bogatyńska
+Boguszowska
+Bogusława Bobrańskiego
+Bohdana Zaleskiego
+Boiskowa
+Bojanowska
+Bolesława Biegasa
+Bolesława Chrobrego
+Bolesława Drobnera
+Bolesława Krzywoustego
+Bolesława Leśmiana
+Bolesława Prusa
+Bolesława Ulanowskiego
+Bolesławiecka
+Bolkowska
+Bombardierska
+Borowikowa
+Borowska
+Borówczana
+Bożego Ciała
+Braci Gierymskich
+Braci Hofmannów
+Braniborska
+Braniewska
+Brata Alberta
+Braterska
+Bratkowa
+Bratysławska
+Brochowska
+Brodnicka
+Brodzka
+Bronisława Knastera
+Bronisława Trentowskiego
+Bronowicka
+Browarna
+Brylantowa
+Brynicka
+Brzeska
+Brzezińska
+Brzoskwiniowa
+Brzostowska
+Brzozowa
+Brzuchowicka
+Brązowa
+Buczacka
+Budowlana
+Budziszyńska
+Buforowa
+Bujna
+Bukowa
+Bukowicka
+Bulwar Księdza Aleksandra Zienkiewicza
+Bulwar Piotra Włostowica
+Bulwar Politechniki Wrocławskiej
+Bulwar Profesora Józefa Zwierzyckiego
+Bulwar Profesora Stanisława Kulczyńskiego
+Bulwar Tadka Jasińskiego
+Buraczana
+Bursztynowa
+Burzowa
+Buska
+Bułgarska
+Byczyńska
+Bydgoska
+Bylinowa
+Bystrzycka
+Bytomska
+Bytowska
+Bzowa
+Będkowska
+Będzińska
+Bławatna
+Błogosławionego Czesława
+Błogosławionego Wincentego Kadłubka
+Błogosławionej Edyty Stein
+Błotna
+Błońska
+Błękitna
+Cedrowa
+Ceglana
+Celtycka
+Cementowa
+Centralna
+Cerekwicka
+Cesarzowicka
+Chabrowa
+Charkowska
+Charlesa Proteusa Steinmetza
+Chałupnicza
+Chemiczna
+Chełmska
+Chińska
+Chlebowa
+Chmielarska
+Chmielna
+Chmurna
+Chobieńska
+Chocianowska
+Chociebuska
+Chocimska
+Chojnowska
+Cholewkarska
+Chorwacka
+Chorzowska
+Chrząstawska
+Chwalimierska
+Chwałkowska
+Chyżan
+Chęcińska
+Chłodna
+Chłopska
+Cicha
+Cichociemnych
+Ciechanowska
+Ciechocińska
+Cieplicka
+Ciepła
+Cieszyńska
+Cisowa
+Cukiernicza
+Cukrowa
+Cukrozetka
+Cynamonowa
+Cynowa
+Cypriana Godebskiego
+Cypriana Kamila Norwida
+Cypryjska
+Cytrynowa
+Czajcza
+Czarnoleska
+Czarnuszkowa
+Czechowicka
+Czekoladowa
+Czeremchowa
+Czereśniowa
+Czerniawska
+Czernicka
+Czerwonego Krzyża
+Czerwonej Róży
+Czerwonych Maków
+Czeska
+Czesława Miłosza
+Czesława Rodziewicza
+Czesława Słani
+Czesława Tańskiego
+Czorsztyńska
+Czołgistów
+Czysta
+Czytankowa
+Częstochowska
+Daktylowa
+Daleka
+Dalemińców
+Dalimira
+Daliowa
+Danuty Siedzikówny
+Darłowska
+Dawida Kurzmanna
+Dedala
+Dekarska
+Dereniowa
+Desantowa
+Deszczowa
+Diamentowa
+Dobra
+Dobroszycka
+Dobrzańska
+Dobrzykowicka
+Dobrzyńska
+Dojazd
+Dojazd pożarowy 30
+Dokerska
+Dolna
+Dolnobrzeska
+Domanowicka
+Domasławska
+Dominikański
+Dożynkowa
+Drewniana
+Drezynowa
+Droga Mleczna
+Drogosławicka
+Drohobycka
+Drukarska
+Drzewna
+Dróżnicza
+Dublańska
+Dubrownicka
+Ducha Świętego
+Dukielska
+Dusznicka
+Duńska
+Dworcowa
+Dworska
+Dyliżansowa
+Dyrekcyjna
+Dywizjonu 303
+Dziadoszańska
+Dziarska
+Działdowska
+Działkowa
+Działkowców
+Działoszyńska
+Dzieci Sybiru
+Dzielna
+Dzielnicowa
+Dzierżoniowska
+Dziewannowa
+Dziwnowska
+Dąbrówki
+Dąbska
+Dębicka
+Dębowa
+Długa
+Długopolska
+Dłutowa
+Dłużycka
+Dźwirzyńska
+Edmonda Micheleta
+Edmunda Kajdasza
+Edmunda Osmańczyka
+Edwarda Abramowskiego
+Edwarda Dembowskiego
+Edwarda Marczewskiego
+Edwarda Suchardy
+Edwarda Wittiga
+Edytorska
+Ekonomiczna
+Ekspresowa
+Elbląska
+Elementarzowa
+Elizy Orzeszkowej
+Emila Zegadłowicza
+Emila Zoli
+Emilii Plater
+Energetyczna
+Ernesta Malinowskiego
+Ernsta Maya
+Estońska
+Etnografów
+Eugeniusza Gepperta
+Eugeniusza Geta-Stankiewicza
+Eugeniusza Horbaczewskiego
+Eugeniusza Kwiatkowskiego
+Eugeniusza Romera
+Eugeniusza Zaka
+Eukaliptusowa
+Europejskiej Stolicy Kultury
+Ewy Kazimirowskiej-Cieszyńskiej
+Ewy i Karola Maleczyńskich
+Ełcka
+Fabryczna
+Farmaceutyczna
+Farna
+Ferdynanda Magellana
+Figowa
+Filipińska
+Filomatów
+Fioletowa
+Fiołkowa
+Fizylierska
+Flisacka
+Folwarczna
+Forsycjowa
+Forteczna
+Fortowa
+Franciszka Hynka
+Franciszka Juszczaka
+Franciszka Karpińskiego
+Franciszka Ksawerego Druckiego-Lubeckiego
+Franciszka Pajączkowskiego
+Franciszka Stefczyka
+Franciszkańska
+Franciszki Platówny
+Francuska
+Franklina Delano Roosevelta
+Franza Petera Schuberta
+Frezjowa
+Fromborska
+Fryderyka Chopina
+Fryderyka Joliot-Curie
+Fryderyka Pautscha
+Fryderyka Skarbka
+Fryzjerska
+Funatsuki
+Gabrieli Kownackiej
+Gabrieli Zapolskiej
+Gajowa
+Gajowicka
+Galla Anonima
+Garbary
+Garwolińska
+Gazowa
+Gałowska
+Gdańska
+Generał Marii Wittek
+Generała Antoniego Madalińskiego
+Generała Augusta Emila Fieldorfa
+Generała Franciszka Kleeberga
+Generała Franciszka Włada
+Generała Ignacego Prądzyńskiego
+Generała Iwana Połbina
+Generała Jana Henryka Dąbrowskiego
+Generała Juliana Filipowicza
+Generała Józefa Bema
+Generała Józefa Hallera
+Generała Józefa Haukego-Bosaka
+Generała Józefa Kustronia
+Generała Józefa Sowińskiego
+Generała Józefa Wybickiego
+Generała Karola Kniaziewicza
+Generała Kazimierza Pułaskiego
+Generała Kazimierza Sosnkowskiego
+Generała Leopolda Okulickiego
+Generała Ludwika Mierosławskiego
+Generała Mariusza Zaruskiego
+Generała Mikołaja Bołtucia
+Generała Romana Abrahama
+Generała Romualda Traugutta
+Generała Stanisława Grzmota-Skotnickiego
+Generała Stanisława Kopańskiego
+Generała Stanisława Maczka
+Generała Stefana Grota-Roweckiego
+Generała Tadeusza Bora-Komorowskiego
+Generała Tadeusza Kutrzeby
+Generała Walerego Wróblewskiego
+Generała Witolda Urbanowicza
+Generała Władysława Sikorskiego
+Geodezyjna
+Gerberowa
+Giełdowa
+Gimnazjalna
+Giserska
+Gitarowa
+Giuseppe Verdiego
+Giżycka
+Glebowa
+Gliniana
+Gliwicka
+Gminna
+Gnieźnieńska
+Godfryda Linkego
+Gogolińska
+Goleszan
+Goplan
+Gorczycowa
+Gorlicka
+Gospodarska
+Gostyńska
+Gosławicka
+Gołdapska
+Gołnowska
+Gołębia
+Gołężycka
+Grabarska
+Grabiszyńska
+Grabowa
+Gradowa
+Grajewska
+Granatowa
+Graniczna
+Granitowa
+Grawerska
+Grażyny Bacewicz
+Grecka
+Grobla Blizanowice-Trestno
+Grobla Janowicko-Swojczycka
+Grobla Kozanowska
+Grobla Obwodowa
+Grobla Opatowicka Zachodnia
+Grobla Swojczycko-Kowalska
+Grobla Szczytnicko-Bartoszowicka
+Grobla Łanieska
+Grochowa
+Grodecka
+Grodzieńska
+Grodzka
+Gromadzka
+Groszkowa
+Grudziądzka
+Grunwaldzka
+Grunwaldzki
+Gruszowa
+Gruzińska
+Grybowska
+Gryczana
+Grzybowa
+Grójecka
+Grębocicka
+Gubińska
+Gwarecka
+Gwarna
+Gwiaździsta
+Gwizdanowska
+Góralska
+Górecka
+Górnicza
+Górnośląska
+Gądowska
+Gęsia
+Głogowska
+Głośna
+Głubczycka
+Głuszycka
+Główna
+Głębowicka
+Hajducka
+Halicka
+Haliny Halskiej
+Haliny Konopackiej
+Halna
+Hanny Wałkówskiej
+Hansa Poelziga
+Harcerska
+Harivansha Rai Bachchana
+Heblarska
+Heinricha Lauterbacha
+Heleny Boguszewskiej
+Heleny Krzemieniewskiej
+Heleny Marusarzówny
+Heleny Modrzejewskiej
+Heleny Motykówny
+Heleny i Ludwika Adamczewskich
+Helska
+Henryka Arctowskiego
+Henryka Brodatego
+Henryka Hipolita Rodakowskiego
+Henryka Jareckiego
+Henryka Michała Kamieńskiego
+Henryka Pobożnego
+Henryka Probusa
+Henryka Siemiradzkiego
+Henryka Sienkiewicza
+Henryka Wereszyckiego
+Henryka Wieniawskiego
+Henrykowska
+Hermanowska
+Hetmańska
+Hiacyntowa
+Himalajska
+Hipokratesa
+Hipolita Cegielskiego
+Hippiczna
+Hiszpańska
+Hodowicka
+Hodowlana
+Hokeistów
+Holenderska
+Honoriusza Balzaka
+Hoża
+Hubska
+Hufcowa
+Hugona Kowarzyka
+Hugona Kołłątaja
+Hugona Steinhausa
+Husarska
+Husycka
+Hutnicza
+Ibn Siny Awicenny
+Icchaka Lejba Pereca
+Igielna
+Iglasta
+Ignacego Chrzanowskiego
+Ignacego Daszyńskiego
+Ignacego Domeyki
+Ignacego Jana Paderewskiego
+Ignacego Mościckiego
+Ignacego Łukasiewicza
+Igora Strawińskiego
+Igora Tawryczewskiego
+Ikara
+Imbirowa
+Indonezyjska
+Inflancka
+Innowacyjna
+Inowrocławska
+Inspektowa
+Inżynierska
+Iracka
+Irkucka
+Irlandzka
+Irysowa
+Ishibashi
+Iwana Franki
+Iwana Pawłowa
+Iwo Jaworskiego
+Iwonicka
+Iławska
+Jabłeczna
+Jacka Kaczmarskiego
+Jacka Kuronia
+Jacka Malczewskiego
+Jadwigi Grabowskiej-Hawrylak
+Jadwigi Złotorzyckiej
+Jagiellońska
+Jagienki
+Jaglana
+Jagniątkowska
+Jagodowa
+Jagodzińska
+Jajczarska
+Jaksonowicka
+Jamesa Cooka
+Jana Amosa Komeńskiego
+Jana Baudouina de Courtenay
+Jana Brzechwy
+Jana Czochralskiego
+Jana Drobuta
+Jana Długosza
+Jana Ewangelisty Purkyniego
+Jana Głogowczyka
+Jana Henryka Pestalozziego
+Jana Heweliusza
+Jana III Sobieskiego
+Jana Jerzego Urbańskiego
+Jana Kaczmarka
+Jana Karola Chodkiewicza
+Jana Kasprowicza
+Jana Kiepury
+Jana Kilińskiego
+Jana Klemensa Branickiego
+Jana Kochanowskiego
+Jana Kuglina
+Jana Lechonia
+Jana Matejki
+Jana Mikulicza-Radeckiego
+Jana Mydlarskiego
+Jana Nikliborca
+Jana Nowaka-Jeziorańskiego
+Jana Ostroroga
+Jana Palacha
+Jana Parandowskiego
+Jana Rubczaka
+Jana Sebastiana Bacha
+Jana Sibeliusa
+Jana Skrzetuskiego
+Jana Stanisławskiego
+Jana Stanki
+Jana Styki i Wojciecha Kossaka
+Jana Szanieckiego
+Jana Szczyrki
+Jana Wesołowskiego
+Jana Władysława Dawida
+Jana Zamoyskiego
+Jana i Jędrzeja Śniadeckich
+Jana Żiżki
+Janiny Bogusławskiej-Jaworskiej
+Janiny Kłopockiej
+Jankiela
+Janowska
+Jantarowa
+Janusza Korczaka
+Janusza Meissnera
+Januszowicka
+Japońska
+Jarnołtowska
+Jarocińska
+Jarosława Iwaszkiewicza
+Jarosławska
+Jarzynowa
+Jarzębinowa
+Jasielska
+Jaskółcza
+Jasna
+Jaspisowa
+Jastrzębia
+Jatki
+Jaworowa
+Jaworska
+Jałowcowa
+Jaśkowicka
+Jaśminowa
+Jaźwińska
+Jedności Narodowej
+Jelczańska
+Jelenia
+Jeleniogórska
+Jemeńska
+Jemiołowa
+Jerzego Badury
+Jerzego Bajana
+Jerzego Cieślikowskiego
+Jerzego Gardy
+Jerzego Józefa Smoleńskiego
+Jerzego Kowalskiego
+Jerzego Kukuczki
+Jerzego Samuela Bandtkiego
+Jerzego Szmajdzińskiego
+Jerzego Treski
+Jerzego Łanowskiego
+Jerzmanowska
+Jesienna
+Jesiennicka
+Jesionowa
+Jeziorowa
+Jeździecka
+Jeżowska
+Joachima Lelewela
+Joannitów
+Jodłowa
+Jodłowicka
+Johanna Straussa
+Johannesa Brahmsa
+Jordanowska
+Jordańska
+Jubilerska
+Jugosłowiańska
+Juliana Fałata
+Juliana Klaczki
+Juliana Tuwima
+Juliana Ursyna Niemcewicza
+Juliusza Kossaka
+Juliusza Słowackiego
+Junacka
+Jurija Gagarina
+Jutrosińska
+Jutrzenki
+Józefa Brandta
+Józefa Chełmońskiego
+Józefa Conrada-Korzeniowskiego
+Józefa Elsnera
+Józefa Gielniaka
+Józefa Ignacego Kraszewskiego
+Józefa Lompy
+Józefa Marii Hoene-Wrońskiego
+Józefa Mianowskiego
+Józefa Pankiewicza
+Józefa Rostafińskiego
+Józefa Supińskiego
+Józefa Wąsowicza
+Jęczmienna
+Jędrzejowska
+Kabaczkowa
+Kaczeńcowa
+Kajakarzy
+Kaletnicza
+Kalinowa
+Kameliowa
+Kamieniecka
+Kamienna
+Kamiennogórska
+Kamila Giżyckiego
+Kamila Stefki
+Kampinoska
+Kanadyjska
+Kanałowa
+Kanonia
+Kanonierska
+Kaparowa
+Kapitulna
+Kapliczna
+Karczemna
+Kardamonowa
+Kardynała Augusta Hlonda
+Kardynała Bolesława Kominka
+Kardynała Mieczysława Ledóchowskiego
+Kardynała Stefana Wyszyńskiego
+Karkonoska
+Karmelkowa
+Karola Adamieckiego
+Karola Darwina
+Karola Libelta
+Karola Lipińskiego
+Karola Marcinkowskiego
+Karola Miarki
+Karola Olszewskiego
+Karola Skibińskiego
+Karola Szajnochy
+Karola Szymanowskiego
+Karpacka
+Karpnicka
+Kartograficzna
+Karwińska
+Kasztanowa
+Kasztelańska
+Kaszubska
+Katedralna
+Katowicka
+Kawalerzystów
+Kazachstańska
+Kazimierska
+Kazimiery Iłłakowiczówny
+Kazimierza Bartla
+Kazimierza Bieńkowskiego
+Kazimierza Brodzińskiego
+Kazimierza Funka
+Kazimierza Jagiellończyka
+Kazimierza Michalczyka
+Kazimierza Przerwy-Tetmajera
+Kazimierza Wielkiego
+Kazimierza Wierzyńskiego
+Kazimierza Witalisa Szarskiego
+Kaznodziejska
+Ketlinga
+Kielecka
+Kiemliczów
+Kiełbaśnicza
+Kiełczowska
+Klasztorna
+Klecińska
+Kleczkowska
+Klemensa Janickiego
+Klonowa
+Kluczborska
+Kmieca
+Kminkowa
+Knignicka
+Kobierzycka
+Kokosowa
+Kolarska
+Kolbuszowska
+Kolejowa
+Kolendrowa
+Kolista
+Komandorska
+Kominiarska
+Komornicka
+Komorowska
+Komuny Paryskiej
+Konduktorska
+Konińska
+Konrada Wallenroda
+Konstantego Ildefonsa Gałczyńskiego
+Kontradmirała Stefana Frankowskiego
+Konwaliowa
+Koperkowa
+Koralowa
+Kordiana
+Koreańska
+Kornela Makuszyńskiego
+Kornela Ujejskiego
+Koronna
+Korzenna
+Korzeńska
+Kosmiczna
+Kosmonautów
+Kostrzyńska
+Kosynierów Gdyńskich
+Koszalińska
+Koszarowa
+Koszycka
+Koszykarska
+Koszykarzy
+Kotlarska
+Kotwiczna
+Kowalska
+Kowieńska
+Kozanowska
+Kozia
+Kozielska
+Kołobrzeska
+Kołodziejska
+Końcowa
+Końska
+Kościańska
+Kościelna
+Kościerzyńska
+Kożuchowska
+Krajobrazowa
+Krakowska
+Krakusa
+Krawiecka
+Kresowa
+Kreślarska
+Krobielowicka
+Krokusowa
+Krotoszyńska
+Krowia
+Krośnicka
+Krośnieńska
+Krucza
+Krupnicza
+Kruszcowa
+Kruszwicka
+Krynicka
+Kryniczna
+Krystyny i Mariana Barskich
+Kryształowa
+Krzelowska
+Krzemieniecka
+Krzeptowska
+Krzeszowska
+Krzycka
+Krzysztofa Kamila Baczyńskiego
+Krzysztofa Kolumba
+Krzysztofa Komedy
+Krzywa
+Krzywa Grobla
+Krzyżanowicka
+Krzyżowska
+Królewiecka
+Królewska
+Królowej Marysieńki
+Krótka
+Krępicka
+Kręta
+Ksawerego Liskego
+Księcia Józefa Poniatowskiego
+Księcia Witolda
+Księdza Augustyna Kordeckiego
+Księdza Bolesława Domańskiego
+Księdza Czesława Klimasa
+Księdza Dietricha Bonhoeffera
+Księdza Emila Szramka
+Księdza Franciszka Salezego Jezierskiego
+Księdza Franciszka Skorusy
+Księdza Grzegorza Piramowicza
+Księdza Hieronima Feichta
+Księdza Jana Dzierżonia
+Księdza Jana Schneidera
+Księdza Józefa Matuszka
+Księdza Konstantego Damrota
+Księdza Marcina Lutra
+Księdza Mariana Stanety
+Księdza Norberta Bonczyka
+Księdza Piotra Skargi
+Księdza Piotra Wawrzyniaka
+Księdza Piotra Ściegiennego
+Księdza Stanisława Brzóski
+Księdza Wincentego Kraińskiego
+Księgarska
+Księgowa
+Księska
+Księżycowa
+Kudowska
+Kujawska
+Kukurydziana
+Kukułcza
+Kupiecka
+Kurkowa
+Kurkumowa
+Kurlandzka
+Kuropatwia
+Kurpiów
+Kurska
+Kurzy Targ
+Kutnowska
+Kuźnicza
+Kwaśna
+Kwiatowa
+Kwidzyńska
+Kwiska
+Kwitnąca
+Kącka
+Kątowa
+Kębłowicka
+Kępińska
+Kętrzyńska
+Kłodnicka
+Kłodzka
+Kłokoczycka
+Kłośna
+Lakiernicza
+Laotańska
+Laskowa
+Laskowicka
+Latawcowa
+Laurowa
+Lawendowa
+Lazurowa
+Lechitów
+Legnicka
+Lekarska
+Lekcyjna
+Leona Petrażyckiego
+Leona Popielskiego
+Leona Wyczółkowskiego
+Leonarda da Vinci
+Leopolda Staffa
+Leopolda Tyrmanda
+Leszczynowa
+Letnia
+Lewa
+Leśna
+Libańska
+Lidzbarska
+Lidzka
+Ligocka
+Liliowa
+Limanowska
+Liońska
+Lipowa
+Lipska
+Lisia
+Litewska
+Litomska
+Liściasta
+Lniana
+Logiczna
+Lokomotywowa
+Lothara Herbsta
+Lotnicza
+Lubawska
+Lubczykowa
+Lubelska
+Lubiąska
+Lubińska
+Lublańska
+Lubomierska
+Lubska
+Lubuska
+Lucjana Siemieńskiego
+Ludomira Różyckiego
+Ludowa
+Ludwiga van Beethovena
+Ludwika Idzikowskiego
+Ludwika Krzywickiego
+Ludwika Kubali
+Ludwika Nabielaka
+Ludwika Pasteura
+Ludwika Pugeta
+Ludwika Rydygiera
+Ludwika Solskiego
+Ludwika Waryńskiego
+Ludwika Zamenhofa
+Ludwisarska
+Lukrecjowa
+Lutycka
+Lutyńska
+Lwowska
+Lądecka
+Macedońska
+Machnicka
+Macieja Dobrackiego
+Macieja Miechowity
+Macieja Przybyły
+Macieja Rataja
+Maciejkowa
+Macierzankowa
+Majerankowa
+Majora Henryka Sucharskiego
+Majora Jana Piwnika-Ponurego
+Majora „Hubala”
+Makowa
+Maksymiliana Jackowskiego
+Malachitowa
+Malarska
+Malborska
+Malczycka
+Malezyjska
+Malinowa
+Malownicza
+Malwowa
+Mandarynkowa
+Mandżurska
+Manganowa
+Marca Polo
+Marcelego Bacciarellego
+Marcelego Handelsmana
+Marcelego Nenckiego
+Marcepanowa
+Marchewkowa
+Marchijska
+Marcina Borelowskiego
+Marcina Bukowskiego
+Marcina Kasprzaka
+Marcina Kromera
+Mariana Falskiego
+Mariana Haisiga
+Mariana Morelowskiego
+Mariana Rapackiego
+Mariana Smoluchowskiego
+Mariana Suskiego
+Marii Curie-Skłodowskiej
+Marii Dulębianki
+Marii Dąbrowskiej
+Marii Konopnickiej
+Marii Rodziewiczówny
+Marii i Lecha Kaczyńskich
+Marii i Stanisława Dawskich
+Marka Hłaski
+Marka Petrusewicza
+Marmurowa
+Marsowa
+Marszałka Edwarda Rydza-Śmigłego
+Marszałka Józefa Piłsudskiego
+Marszowicka
+Marty Burbianki
+Marynarska
+Masztowa
+Maszynistów
+Matematyczna
+Maurycego Beniowskiego
+Maurycego Mochnackiego
+Maurycego Ravela
+Maxa Berga
+Mazepy
+Mazowiecka
+Małomicka
+Małopanewska
+Małopolska
+Małoszyńska
+Maślicka
+Mechaników
+Melchiora Wańkowicza
+Meliorancka
+Meliorancka Południowa
+Melisowa
+Mennicza
+Metalowców
+Mewia
+Mglista
+Michała Bałuckiego
+Michała Drzymały
+Michała Płońskiego
+Michała Tadeusza Falzmanna
+Michała Wołodyjowskiego
+Michała Wrocławczyka
+Michała Śniegockiego
+Miechowska
+Mieczykowa
+Mieczysława Karłowicza
+Mieczysława Niedziałkowskiego
+Mieczysława Orłowicza
+Mieczysława Romanowskiego
+Mieczysława Wolfkego
+Mieczysława Zlata
+Miedziana
+Miejska
+Mielecka
+Miernicza
+Mieroszowska
+Mieszczańska
+Mieszka I
+Migdałowa
+Mikory
+Mikołaja Kopernika
+Mikołaja Reja
+Mikołaja Sieniawskiego
+Mikołaja Sępa-Szarzyńskiego
+Mikołowska
+Milenijna
+Milicka
+Miodowa
+Mirkowska
+Mirona Białoszewskiego
+Mirtowa
+Międzygórska
+Międzyleska
+Międzyrzecka
+Międzyzdrojska
+Miętowa
+Miętowa Południowa
+Miła
+Miłkowska
+Miłostowska
+Miłoszycka
+Mińska
+Mleczarska
+Modlińska
+Modra
+Modrzewiowa
+Mojęcicka
+Mokra
+Mokronoska
+Mokrzańska
+Mongolski
+Monopolowa
+Monte Cassino
+Monterska
+Morawska
+Morelowa
+Morelowa aleja
+Morska
+Morwowa
+Mosiężna
+Mostowa
+Motylkowa
+Mrozowska
+Mroźna
+Mrągowska
+Muchoborska
+Mulicka
+Murarska
+Murowana
+Muzealna
+Mydlana
+Myszkowska
+Mysłakowicka
+Mysłowicka
+Myśliwska
+Mączna
+Młoda
+Młodych Techników
+Młodzieżowa
+Młynarska
+Na Grobli
+Na Końcu
+Na Niskich Łąkach
+Na Ostatnim Groszu
+Na Polance
+Na Szańcach
+Nabycińska
+Nadbrzeżna
+Nadolicka
+Nadrzeczna
+Nagietkowa
+Najświętszej Marii Panny
+Namysłowska
+Narciarska
+Narcyzowa
+Narcyzy Żmichowskiej
+Narzędziowa
+Nasienna
+Nastawnicza
+Nasturcjowa
+Nasypowa
+Nauczycielska
+Nałęczowska
+Nefrytowa
+Nektarowa
+Nenufarowa
+Nepalska
+Niborska
+Niebieska
+Niecała
+Niedźwiedzia
+Niemczańska
+Niemkińska
+Niepierzyńska
+Niepodległości
+Niklowa
+Nizinna
+Norberta Barlickiego
+Norweska
+Notecka
+Nowa
+Nowodworska
+Nowogródzka
+Nowohucka
+Nowosolska
+Nowosądecka
+Nowotarska
+Nowowiejska
+Nowy Świat
+Nożownicza
+Nyska
+Objazdowa
+Obodrzycka
+Obornicka
+Oboźna
+Obrońców Poczty Gdańskiej
+Ochocza
+Odcinek
+Odeska
+Odkrywców
+Odolanowska
+Odona Bujwida
+Odrodzenia Polski
+Odrzańska
+Ofiar Obozu Burgweide
+Ofiar Oświęcimskich
+Oficerska
+Ogrodowa
+Ogórkowa
+Ojca Beyzyma
+Ojców Oblatów
+Okrętowa
+Okrężna
+Oksywska
+Okólna
+Olbrachtowska
+Oleska
+Oleśnicka
+Olgi Boznańskiej
+Olgi Drahonowskiej
+Oliwkowa
+Olkuska
+Olsztyńska
+Omska
+Onufrego Zagłoby
+Opalowa
+Opatowicka
+Opoczyńska
+Opolska
+Oporowska
+Opłotkowa
+Oraczy
+Orawska
+Orkiszowa
+Orla
+Orna
+Orzechowa
+Osadnicza
+Osiecka
+Osiedlowa
+Osiniecka
+Oskara Kolberga
+Oskara Minkowskiego
+Osobowe
+Osobowicka
+Osolska
+Ostowa
+Ostowa Północna
+Ostrowska
+Ostrzeszowska
+Ostródzka
+Ostrężynowa
+Otmuchowska
+Otrębowa
+Otwarta
+Otwocka
+Otyńska
+Owcza
+Owczarska
+Owocowa
+Owsiana
+Oławska
+Ołbińska
+Ołowiana
+Ołtaszyńska
+Ożarowska
+Ożynowa
+Pabianicka
+Pachnąca
+Paczkowska
+Pakistańska
+Pakosławska
+Palestyńska
+Palisadowa
+Pamirska
+Paniowicka
+Panoramiczna
+Papiernicza
+Paprotna
+Parafialna
+Parkowa
+Parowozowa
+Partynicka
+Partyzantów
+Paryska
+Pasaż Niepolda
+Pasaż Pokoyhof
+Pasaż Studencki
+Pasaż pod Błękitnym Słońcem
+Pasieczna
+Pastelowa
+Pasterska
+Pasymska
+Pasłęcka
+Paulińska
+Pawia
+Pawła Eluarda
+Pawła Jasienicy
+Pawła Kwoczka
+Pawła Włodkowica
+Pawłowicka
+Pałucka
+Pedagogiczna
+Pejzażowa
+Perkusyjna
+Peron 2
+Peron 3
+Peronowa
+Perska
+Perzowa
+Perłowa
+Petuniowa
+Pełczyńska
+Piaskowa
+Piastowska
+Piechoty
+Piechowicka
+Piekarska
+Pielęgniarska
+Pienińska
+Pieprzna
+Piernikowa
+Pierwiosnkowa
+Pierwszej Dywizji
+Piesza
+Pieszycka
+Pietruszkowa
+Pietrzykowicka
+Pigwowa
+Pilczycka
+Pilnikarska
+Pionierska
+Pionierów
+Piotra Czajkowskiego
+Piotra Ignuta
+Piotra Michałowskiego
+Piotra Norblina
+Piotra Wysockiego
+Piotrkowska
+Piołunowa
+Pirenejska
+Pisarzowicka
+Pistacjowa
+Piwna
+Piwniczna
+Piwowarska
+Piękna
+Pięćdziesięciu Bohaterów
+Piławska
+Piłkarzy
+Pińska
+Plac Biskupa Nankiera
+Plac Bohaterów Getta
+Plac Bzowy
+Plac Ciesielski
+Plac Franciszkański
+Plac Gustawa Daniłowskiego
+Plac Icchaka Lejba Pereca
+Plac Indyjski
+Plac Jana Pawła II
+Plac Kaliski
+Plac Katedralny
+Plac Konstytucji 3 Maja
+Plac Kościelny
+Plac Legionów
+Plac Ludwika Hirszfelda
+Plac Marszałka Józefa Piłsudskiego
+Plac Maxa Borna
+Plac Mordechaja Anielewicza
+Plac Muzealny
+Plac Nowy Targ
+Plac Ojca Adama Wiktora SJ
+Plac Orląt Lwowskich
+Plac Powstańców Warszawy
+Plac Rozjezdny
+Plac Solidarności
+Plac Solny
+Plac Srebrny
+Plac Strzelecki
+Plac Słowiański
+Plac Tadeusza Kościuszki
+Plac Uniwersytecki
+Plac Westerplatte
+Plac Wiślany
+Plac Wolności
+Plac Wyzwolenia
+Plac Zgody
+Plac Świętego Jana Chrzciciela
+Plac Świętego Macieja
+Plac Świętojański
+Planetarna
+Platanowa
+Plenerowa
+Pleszewska
+Pochyła
+Pocztowa
+Podbiałowa
+Podchorążych
+Podhalańska
+Podolska
+Podpułkownika Stanisława Skarżyńskiego
+Podróżnicza
+Podwale
+Podwórcowa
+Pogodna
+Pokrzywowa
+Polanowicka
+Polanowicka Północna
+Polarna
+Poleska
+Polkowicka
+Polna
+Polnych Niezapominajek
+Polonii Wrocławskiej
+Polski
+Pomarańczowa
+Pomidorowa
+Pomorska
+Pomost Romana Faligowskiego
+Popowicka
+Poprzeczna
+Porajowska
+Poranna
+Poronińska
+Portowa
+Porzeczkowa
+Porębska
+Postojowa
+Postolińska
+Postępowa
+Potokowa
+Powiewna
+Powstańców Wielkopolskich
+Powstańców Śląskich
+Poziomkowa
+Poznańska
+Połabian
+Połaniecka
+Południowa
+Poświęcka
+Pracka
+Pracy
+Prawa
+Prezydenta Gabriela Narutowicza
+Prezydenta Ryszarda Kaczorowskiego
+Prochowicka
+Profesora Dionizego Smoleńskiego
+Promenada
+Promenada Oławska
+Promenada Staromiejska
+Promień
+Prosta
+Prudnicka
+Prusicka
+Prymulkowa
+Przebiśniegowa
+Przechodnia
+Przedmiejska
+Przednia
+Przedwiośnie
+Przedświt
+Przejazdowa
+Przelot
+Przemiłowska
+Przemkowska
+Przemyska
+Przemysłowa
+Przesiecka
+Przeskok
+Przestrzenna
+Przy Torze
+Przyjazna
+Przyjaźni
+Przylaszczkowa
+Przystankowa
+Prędka
+Prężycka
+Psie Budy
+Pszczelarska
+Pszczyńska
+Pszenna
+Ptasia
+Pucka
+Purpurowa
+Pusta
+Pustecka
+Puszczykowska
+Pułkownika Bolesława Orlińskiego
+Pułkownika Franciszka Nulla
+Pułkownika Józefa Becka
+Pułkownika Kazimierza Masztalerza
+Pułkownika Ryszarda Kuklińskiego
+Pułkownika Stanisława Dąbka
+Pułtuska
+Pyrzycka
+Północna
+Pęgowska
+Płaska
+Płużna
+Rabczańska
+Raciborska
+Racławicka
+Radarowa
+Radkowska
+Radomska
+Radosna
+Radzionkowska
+Radzyńska
+Radłowa
+Rafała Krajewskiego
+Rafała Maszkowskiego
+Rafała Wojaczka
+Rajska
+Rakietowa
+Rakowa
+Rakowiecka
+Ramiszowska
+Raszowska
+Ratajów
+Ratyńska
+Rawicka
+Rawska
+Raźna
+Rdestowa
+Redarów
+Redycka
+Rejonowa
+Reszelska
+Rewalska
+Rezedowa
+Roberta Kocha
+Robotnicza
+Rodzinna
+Rodziny Kornów
+Rodzynkowa
+Rodła
+Rogowska
+Rokitnikowa
+Rolna
+Rolnicza
+Romana Dmowskiego
+Romana Zmorskiego
+Romualda Cabaja
+Romualda Mielczarskiego
+Rotmistrza Witolda Pileckiego
+Rowerowa
+Rozbrat
+Rozjazdowa
+Rozmarynowa
+Roślinna
+Rubinowa
+Ruciana
+Ruczajowa
+Rudawska
+Rudolfa Modrzejewskiego
+Rudolfa Weigla
+Rudzka
+Rumiankowa
+Ruska
+Rusznikarska
+Rybacka
+Rybnicka
+Rycerska
+Rychtalska
+Rychła
+Rymarska
+Rynek
+Rynek Psiego Pola
+Rynek Ratusz
+Rynek Szczepiński
+Rysia
+Ryska
+Ryszarda Wagnera
+Rytownicza
+Ryżowa
+Rzeczna
+Rzemieślnicza
+Rzepakowa
+Rzeszowska
+Rzeźbiarska
+Rzeźnicza
+Równa
+Róż
+Różana
+Róży Wiatrów
+Rącza
+Rędzińska
+Rękodzielnicza
+Sadowa
+Sadownicza
+Sakury
+Salezjańska
+Salonkowa
+Samborska
+Samolotowa
+Samotna
+Samotworska
+Samuela Bogumiła Lindego
+Samuela Dicksteina
+Sanocka
+Saperów
+Sarajewska
+Sarbinowska
+Sarnia
+Sasankowa
+Seledynowa
+Semaforowa
+Serbska
+Sernicka
+Serowarska
+Setna
+Sewastopolska
+Seweryna Goszczyńskiego
+Seweryna Udzieli
+Seweryna Wysłoucha
+Sezamkowa
+Siatkarzy
+Siedlecka
+Siedliczan
+Sielska
+Siemianowicka
+Siemianowski
+Sienna
+Sieradzka
+Sieroszowicka
+Siewców
+Siewierska
+Siewna
+Sikorcza
+Siostrzana
+Skarbowców
+Skarbu Zakrzowskiego
+Skałeczna
+Skibowa
+Skierniewicka
+Skoczna
+Skopijska
+Skoroszowska
+Skrajna
+Skrzydlata
+Skrzypowa
+Skwer Kazimierza Idaszewskiego
+Skwer Obrońców Helu
+Skwer Pionierów Wrocławskich
+Skwer Powstańców Warszawskich
+Skwer Ruchu Oporu „Olimp”
+Skwerowa
+Skwierzyńska
+Składowa
+Smardzowska
+Smocza
+Smolecka
+Smolna
+Smętna
+Snopkowa
+Snycerska
+Sobieszowska
+Sobocińska
+Sobótki
+Sochaczewska
+Sojowa
+Sokalska
+Sokola
+Sokolnicza
+Solidarności Polsko-Czesko-Słowackiej
+Solińska
+Sopocka
+Sosnowa
+Sosnowiecka
+Sowia
+Sołtysia
+Sołtysowicka
+Sośnicka
+Spacerowa
+Spadochroniarzy
+Spawaczy
+Spiska
+Spiżowa
+Spokojna
+Sportowa
+Społeczna
+Spółdzielcza
+Srebrnogórska
+Srebrzysta
+Srocza
+Stabłowicka
+Stacha Świstackiego
+Stacyjna
+Stajenna
+Stalowa
+Stalowowolska
+Stanisława Bąka
+Stanisława Chudoby
+Stanisława Drabika
+Stanisława Dubois
+Stanisława Dygata
+Stanisława Grochowiaka
+Stanisława Hartmana
+Stanisława Jana Jabłonowskiego
+Stanisława Koniecpolskiego
+Stanisława Kosińskiego
+Stanisława Kunickiego
+Stanisława Kusztelana
+Stanisława Leszczyńskiego
+Stanisława Małachowskiego
+Stanisława Moniuszki
+Stanisława Noakowskiego
+Stanisława Pilata
+Stanisława Piętaka
+Stanisława Przybyszewskiego
+Stanisława Pękalskiego
+Stanisława Rosponda
+Stanisława Staszica
+Stanisława Więckowskiego
+Stanisława Worcella
+Stanisława Wyspiańskiego
+Stanisława Żółkiewskiego
+Stanisławowska
+Stanisławy Adamowiczowej
+Stanów Zjednoczonych
+Stargardzka
+Starobielawska
+Starodworska
+Starodębowa
+Starogajowa
+Starograniczna
+Starogroblowa
+Staroleska
+Staromłyńska
+Staropolska
+Starościńska
+Stawowa
+Stefana Banacha
+Stefana Batorego
+Stefana Czarnieckiego
+Stefana Drzewieckiego
+Stefana Inglota
+Stefana Jaracza
+Stefana Okrzei
+Stefana Starzyńskiego
+Stefana Szolc-Rogozińskiego
+Stefana Żeromskiego
+Stefanii Sempołowskiej
+Sterowcowa
+Stobrawska
+Stoczniowa
+Stodolna
+Stokrotkowa
+Stolarska
+Stopnicka
+Storczykowa
+Stoszowska
+Strachocińska
+Strachowicka
+Stradomska
+Strażacka
+Strażnicza
+Stroma
+Strońska
+Strumykowa
+Stryjska
+Strzeblowska
+Strzegomska
+Strzegomski
+Strzelecka
+Strączkowa
+Studzienna
+Sucha
+Sudecka
+Sukielicka
+Sukiennice
+Sulejowska
+Sulistrowska
+Sulmierzycka
+Suwalska
+Sułowska
+Swobodna
+Swojczycka
+Sycowska
+Sygnałowa
+Syjamska
+Synów Pułku
+Syryjska
+Szachistów
+Szafranowa
+Szara
+Szarotkowa
+Szarugi
+Szarych Szeregów
+Szałwiowa
+Szczawiowa
+Szczecińska
+Szczepanowska
+Szczepińska
+Szczepowa
+Szczycieńska
+Szczygla
+Szczypiornicka
+Szczytnicka
+Szczęśliwa
+Szermierzy
+Szewska
+Szkarłatna
+Szklarska
+Szkocka
+Szkolna
+Szkutnicza
+Szlabanowa
+Szlifierska
+Szmaragdowa
+Szpacza
+Szparagowa
+Szpilkowa
+Szpitalna
+Szprotawska
+Szronowa
+Sztabowa
+Szwajcarska
+Szwedzka
+Szybka
+Szybowcowa
+Szymona Konarskiego
+Szynowa
+Sądowa
+Sąsiedzka
+Sępia
+Słomiana
+Słoneczna
+Słonecznikowa
+Słoneczny
+Słonimska
+Słotna
+Słowacka
+Słowiańska
+Słowicza
+Słowińców
+Słubicka
+Słupska
+TIR
+Tadeusza Boya-Żeleńskiego
+Tadeusza Brzozy
+Tadeusza Czackiego
+Tadeusza Dołęgi-Mostowicza
+Tadeusza Gajcego
+Tadeusza Kościuszki
+Tadeusza Micińskiego
+Tadeusza Mikulskiego
+Tadeusza Rejtana
+Tadeusza Wendy
+Tadeusza Zelenaya
+Tadeusza Zielińskiego
+Tadżycka
+Taiko Bashi
+Tajwańska
+Tallińska
+Tapicerska
+Tarasa Szewczenki
+Targowa
+Tarninowa
+Tarnobrzeska
+Tarnogajska
+Tarnogórska
+Tarnopolska
+Tarnowska
+Tatarakowa
+Tatarska
+Tatrzańska
+Tczewska
+Teatralna
+Teatralny
+Telimeny
+Tenisowa
+Teodora Parnickiego
+Teofila Lenartowicza
+Teofila Modelskiego
+Terenowa
+Tkacka
+Tokarska
+Tolkmicka
+Tomaszowska
+Topolowa
+Tor do jazdy ulicznej
+Torfowa
+Torowa
+Toruńska
+Towarowa
+Trakcyjna
+Traktatowa
+Traktorowa
+Tramwajowa
+Trasa Bohaterów Bitwy Warszawskiej 1920 r.
+Trasa Powstańców Wielkopolskich
+Trawowa
+Trocka
+Truskawkowa
+Trwała
+Trzebnicka
+Trzebowiańska
+Trzemeska
+Trzmielowicka
+Trójkątna
+Tulipanowa
+Tunelowa
+Turawska
+Turecka
+Turkusowa
+Turniejowa
+Turoszowska
+Turystyczna
+Twarda
+Twardogórska
+Tybetańska
+Tykocińska
+Tylna
+Tymiankowa
+Tymoteusza Karpowicza
+Tyniecka
+Tyska
+Tytusa Chałubińskiego
+Tęczowa
+Ubocze
+Uciechowska
+Uczniowska
+Ukraińska
+Ukryta
+Ulowa
+Uniwersytecka
+Upalna
+Uraska
+Urodzajna
+Ustronie
+Uzbecka
+Uznamska
+Ułańska
+Vasco da Gamy
+Wacława Berenta
+Wacława Gąsiorowskiego
+Wacława Potockiego
+Wadowicka
+Waflowa
+Wagonowa
+Walecznych
+Walentego Roździeńskiego
+Walerego Goetla
+Walerego Sławka
+Waleriana Łukasińskiego
+Walońska
+Wambierzycka
+Wandy
+Wandy Rutkiewicz
+Waniliowa
+Wapienna
+Warciańska
+Warmińska
+Warszawska
+Warsztatowa
+Warzywnicza
+Watowa
+Wałbrzyska
+Wałowa
+Wedutowa
+Wegańska
+Wejherowska
+Wenedów
+Weroniki Kumko
+Wesoła
+Westerplatte
+Wełniana
+Wiaduktowa
+Wichrowa
+Widawska
+Widna
+Widok
+Widłakowa
+Wieczorna
+Wieczysta
+Wiedeńska
+Wiejska
+Wieletów
+Wielka
+Wielkiej Wyspy
+Wielkopolska
+Wieluńska
+Wieruszowska
+Wierzbowa
+Wierzchowicka
+Wietnamska
+Wietrzna
+Wieśniacza
+Wiktora Brossa
+Wilanowska
+Wilcza
+Wilczkowska
+Wilczycka
+Wileńska
+Wilgotna
+Wilgowa
+Wilhelma Grapowa
+Wilhelma Roentgena
+Wilkaska
+Wilkszyńska
+Wincentego Pola
+Wincentego Stysia
+Wincentego Witosa
+Winogronowa
+Wiosenna
+Wisławy Szymborskiej
+Wita Stwosza
+Witebska
+Witelona
+Witkowska
+Witolda Gombrowicza
+Witolda Lipińskiego „Szczedronia”
+Witolda Lutosławskiego
+Witolda Taszyckiego
+Witolda Wojtkiewicza
+Wiązowa
+Więzienna
+Wińska
+Wiślańska
+Wiśniowa
+Wodzisławska
+Wojanowska
+Wojciecha Bogusławskiego
+Wojciecha Cybulskiego
+Wojciecha Gersona
+Wojciecha Jerzego Hasa
+Wojciecha Kilara
+Wojciecha Korfantego
+Wojciecha Męcińskiego
+Wojciecha Młynarskiego
+Wojciecha z Brudzewa
+Wojnowicka
+Wojrowicka
+Wojska Polskiego
+Wojszycka
+Wolbromska
+Wolfganga Amadeusza Mozarta
+Wolinian
+Wolska
+Woronowicka
+Woskowa
+Wołczyńska
+Wołgogradzka
+Wołodyjowskiego
+Wołowska
+Wołyńska
+Woźnicza
+Wrocławska
+Wrocławskich Rotarian
+Wronia
+Wrzosowa
+Wróbla
+Wróblowicka
+Wschodnia
+Wschodnia Obwodnica Wrocławia
+Wschowska
+Wspólna
+Wszystkich Świętych
+Wyboista
+Wygodna
+Wykładowa
+Wylotowa
+Wysoka
+Wyspa Słodowa
+Wystawowa
+Wyścigowa
+Wzajemnego Szacunku
+Wójtowska
+Wąska
+Wędkarzy
+Wędrowców
+Węgierska
+Węgliniecka
+Węgoborska
+Władysława Anczyca
+Władysława Bełzy
+Władysława Broniewskiego
+Władysława Chachaja
+Władysława Czaplińskiego
+Władysława Grabskiego
+Władysława Jagiełły
+Władysława Nehringa
+Władysława Orkana
+Władysława Reymonta
+Władysława Skoczylasa
+Władysława Syrokomli
+Władysława Szafera
+Władysława Zarembowicza
+Władysława i Jana Wardzyńskich
+Władysława Łokietka
+Władysława Ślebodzińskiego
+Władysława Ślewińskiego
+Włodarska
+Włodzimierza Majakowskiego
+Włodzimierza Perzyńskiego
+Włodzimierza Trzebiatowskiego
+Włościańska
+Włókniarzy
+Xawerego Dunikowskiego
+Yumedono Bashi
+Zabrodzka
+Zabrzańska
+Zabłocie
+Zachodnia
+Zagaje
+Zagajnikowa
+Zagony
+Zagrodnicza
+Zagrzebska
+Zagłębiowska
+Zajazdowa
+Zajączkowska
+Zajęcza
+Zakopiańska
+Zakrzowska
+Zakładowa
+Zalewowa
+Zalipie
+Zamkowa
+Zamojska
+Zamłynie
+Zaolziańska
+Zapaśnicza
+Zaporoska
+Zapotocze
+Zarzecze
+Zastępowa
+Zatorska
+Zaułek Ferdynanda Lassalla
+Zaułek Jerzego Grotowskiego
+Zaułek Ossolińskich
+Zaułek Rogoziński
+Zaułek Solny
+Zaułek Wolski
+Zawalna
+Zawiadowcza
+Zawidowska
+Zawierciańska
+Zawilcowa
+Zawiszy Czarnego
+Zawońska
+Zaziębie
+Załęże
+Zaściankowa
+Zbarska
+Zbigniewa Brzezińskiego
+Zbożowa
+Zdrojowa
+Zdrowa
+Zduńska
+Zdzisława Dębickiego
+Zebrzydowska
+Zecerska
+Zefirowa
+Zegarmistrzowska
+Zemska
+Zenona Kosidowskiego
+Zenona Miriama Przesmyckiego
+Zgodna
+Zgorzelecka
+Zielna
+Zielona
+Zielonego Dębu
+Zielonogórska
+Ziemniaczana
+Ziemowita
+Zimowa
+Ziębicka
+Zofii Chrzanowskiej
+Zofii Gostomskiej-Zarzyckiej
+Zofii Gumińskiej
+Zofii Kossak-Szczuckiej
+Zofii Kuratowskiej
+Zofii Nałkowskiej
+Zuchowa
+Zwiadowców
+Zwrotnicza
+Zwycięska
+Zygmunta Glogera
+Zygmunta Janiszewskiego
+Zygmunta Krasińskiego
+Zygmunta Markowskiego
+Zygmunta Noskowskiego
+Zygmunta Sierakowskiego
+Zygmunta Wróblewskiego
+Zyndrama z Maszkowic
+Ząbkowicka
+Złocieniowa
+Złota
+Złotej Lilii
+Złotnicka
+Złotoryjska
+Złotostocka
+Złotowska
+Ósemka
+Ćwiczebna
+Łabędzia
+Łaciarska
+Ładna
+Łagiewnicka
+Łaniewska
+Łanowa
+Łaska
+Łazienna
+Łomnicka
+Łomżyńska
+Łopianowa
+Łososiowicka
+Łowiecka
+Łozińska
+Łubinowa
+Łuczan
+Łuczników
+Ługowa
+Ługowińska
+Łukasza Górnickiego
+Łukowa
+Łukowska
+Łużycka
+Łysogórska
+Łyżwiarzy
+Łódzka
+Łączna
+Łączności
+Łąka Mazurska
+Łąkowa
+Łęczycka
+Ścieżka Sensoryczna
+Ścieżka zdrowia
+Ścinawska
+Ślazowa
+Ślepa
+Śliczna
+Śliwkowa
+Śliwowa
+Ślusarska
+Śląska
+Ślęzoujście
+Ślężańska
+Ślężna
+Śmigła
+Śnieżna
+Średzka
+Śremska
+Środkowa
+Śrubowa
+Śrutowa
+Śródleśna
+Świdnicka
+Świebodzka
+Świeradowska
+Świerkowa
+Świeża
+Świnoujska
+Świt
+Świątnicka
+Świętego Antoniego
+Świętego Huberta
+Świętego Idziego
+Świętego Jana
+Świętego Jerzego
+Świętego Józefa
+Świętego Krzysztofa
+Świętego Macieja
+Świętego Marcina
+Świętego Mikołaja
+Świętego Pawła
+Świętego Wincentego
+Świętego Wita
+Świętej Anny
+Świętej Barbary
+Świętej Doroty
+Świętej Elżbiety
+Świętej Jadwigi
+Świętej Katarzyny
+Świętej Marii Magdaleny
+Świętej Matki Teresy z Kalkuty
+Świętej Trójcy
+Świętochłowicka
+Świętokrzyska
+Źródlana
+Żabia Grobla
+Żabia kładka
+Żabia Ścieżka
+Żagańska
+Żarska
+Żegiestowska
+Żeglarska
+Żelazna
+Żernicka
+Żeńców
+Żmigrodzka
+Żmudzka
+Żniwna
+Żonkilowa
+Żołnierska
+Żubrza
+Żurawia
+Żurawinowa
+Żużlowców
+Żwirki i Wigury
+Żwirki i Wigury Zachodnia
+Żwirowa
+Życzliwa
+Żytawska
+Żytnia
+Żytomierska
+Żywiecka
+Żywopłotowa
+Żółta

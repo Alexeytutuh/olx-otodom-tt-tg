@@ -1,0 +1,3 @@
+# Python >= 3.9 (zoneinfo, dict/set generics with `from __future__ import annotations`); tested on 3.13
+curl_cffi>=0.7     # optional but recommended (Chrome TLS fingerprint); falls back to the `curl` binary
+tzdata; sys_platform == "win32"   # zoneinfo needs it on Windows (Linux/macOS use the system tz database)
