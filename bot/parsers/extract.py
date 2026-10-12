@@ -29,6 +29,11 @@ INCLUDED_NOAMT = INCLUDED + r"(?![^.\n\d]{0,12}\d)"
 # "czynsz i prąd 500 zł", "opłaty do zarządcy i prąd ok 500 zł": one sum for several costs.
 _COMBINED_BEFORE = re.compile(r"(?:czynsz|op[lł]at|zarz[aą]dc|administrac|media|medi[oó]w|gaz|wod[aąy]|ogrzewani|rachunk)\w*[^.\n\d]{0,8}?(?:\bi\b|\boraz\b|wraz z|\+|\bplus\b|,)\s*(?:op[lł]at\w* za?\s*)?$", re.I)
 
+# "800–1000 zł", "od 800 do 1000 zł": a range; only the czynsz search reads it (as lo, hi remembered).
+_RANGE = re.compile(r"(?:\bod[ \t]+)?(?P<lo>\d{1,3}(?:[ .]\d{3})+(?!\d)|\d+)[ \t]*(?:zł|zl|pln)?[ \t]*"
+                    r"(?:[-–—]|\bdo\b)[ \t]*(?P<hi>\d{1,3}(?:[ .]\d{3})+(?!\d)|\d+)(?=[ \t]*(?:zł\b|zl\b|złotych|pln\b))",
+                    re.I)
+
 _MONTHS_WORDS = {"jedno": 1, "jednego": 1, "1": 1, "dwu": 2, "dwóch": 2, "dwoch": 2, "2": 2,
                  "trzy": 3, "trzech": 3, "3": 3}
 
@@ -106,12 +111,24 @@ def extract_costs(text: str, price: Optional[float] = None) -> tuple[dict, list[
         out["czynsz_pln"] = 0.0
         notes.append("czynsz: included in price (text)")
     else:
-        v = _first(_find_amount(t, FIELDS["czynsz"], require_unit=False, exclude=excl))
+        ranges: dict = {}
+
+        def collapse(m: re.Match) -> str:
+            lo, hi = (float(re.sub(r"[ .]", "", m.group(g))) for g in ("lo", "hi"))
+            if not lo < hi:
+                return m.group(0)
+            ranges[lo] = hi
+            return m.group("lo")
+        tc = _RANGE.sub(collapse, t)
+        v = _first(_find_amount(tc, FIELDS["czynsz"], require_unit=False, exclude=excl))
         if v is None:
-            v = _first(_find_amount(t, FIELDS["czynsz_weak"], exclude=excl))
+            v = _first(_find_amount(tc, FIELDS["czynsz_weak"], exclude=excl))
         if v is not None and 0 < v < 5000:
             out["czynsz_pln"] = v
             notes.append("czynsz: description")
+            if v in ranges:
+                out["czynsz_max_pln"] = ranges[v]
+                notes.append(f"czynsz: range up to {ranges[v]:g}")
 
     # kaucja
     v = _first(_find_amount(t, FIELDS["kaucja"], require_unit=False))

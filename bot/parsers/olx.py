@@ -260,8 +260,9 @@ class OlxParser:
         if czynsz is not None:
             notes.append("czynsz: structured")
         costs, cost_notes = extract_costs(desc, price)
+        czynsz_max = None
         if czynsz is None and "czynsz_pln" in costs:
-            czynsz = costs["czynsz_pln"]
+            czynsz, czynsz_max = costs["czynsz_pln"], costs.get("czynsz_max_pln")
             notes += [n for n in cost_notes if n.startswith("czynsz")]
         notes += [n for n in cost_notes if not n.startswith("czynsz")]
 
@@ -296,7 +297,7 @@ class OlxParser:
         refreshed = parse_dt(o.get("pushup_time")) or parse_dt(o.get("last_refresh_time"))
         lst = Listing(
             source=SOURCE, source_id=str(o.get("id")), url=o.get("url") or "", title=title,
-            description_text=desc, price_pln=price, czynsz_pln=czynsz,
+            description_text=desc, price_pln=price, czynsz_pln=czynsz, czynsz_max_pln=czynsz_max,
             media_pln=costs.get("media_pln"), prad_pln=costs.get("prad_pln"),
             kaucja_pln=costs.get("kaucja_pln"), parking_pln=costs.get("parking_pln"),
             parking=(parking_v or {}).get("label"), pets=((pets_v or {}).get("label") or None),

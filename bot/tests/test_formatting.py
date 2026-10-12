@@ -123,6 +123,23 @@ class StreetsAndFeatures(unittest.TestCase):
         self.assertEqual(costs["parking_pln"], 200.0)
         self.assertEqual(extract_costs("Cena 3000 zł, 500 zł kaucji.", 3000.0)[0]["kaucja_pln"], 500.0)
 
+    def test_czynsz_range(self):
+        from parsers.extract import extract_costs
+        t = ("- czynsz najmu: 3000 zł miesięcznie,\n- kaucja zwrotna: 3000 zł,\n- czynsz administracyjny i pozostałe "
+             "opłaty eksploatacyjne: orientacyjnie 800–1000 zł miesięcznie, zależnie od liczby mieszkańców,")
+        costs, _ = extract_costs(t, 3000.0)
+        self.assertEqual((costs["czynsz_pln"], costs["czynsz_max_pln"]), (800.0, 1000.0))
+        self.assertEqual(costs["kaucja_pln"], 3000.0)
+        for s, want in (("Czynsz: 800-1000 zł", (800.0, 1000.0)), ("czynsz od 600 do 700 zł", (600.0, 700.0)),
+                        ("Czynsz administracyjny 1.000 - 1.200 zł", (1000.0, 1200.0)),
+                        ("Czynsz 500 zł. Kaucja 3000-4000 zł", (500.0, None))):
+            c = extract_costs(s, 3000.0)[0]
+            self.assertEqual((c["czynsz_pln"], c.get("czynsz_max_pln")), want, s)
+        post = F.build_post(listing("10", rooms=3, area_m2=60.0, price_pln=3000.0, czynsz_pln=800.0,
+                                    czynsz_max_pln=1000.0, media_pln=None, parking_pln=None, prad_pln=None,
+                                    kaucja_pln=3000.0), TODAY)
+        self.assertIn("Cena: 3000 zł\nCzynsz: 800–1000 zł\n\nRazem: 3800–4000 zł/mies.", post.plain)
+
     def test_parking_without_price(self):
         def lines(desc, parking=None, price=5000.0):
             return F.cost_lines(listing("9", description_text=desc, parking=parking, parking_pln=None,

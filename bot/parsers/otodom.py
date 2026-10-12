@@ -319,6 +319,7 @@ class OtodomParser:
 
         czynsz = pick(to_float(cval("rent")) if cval("rent") is not None else to_float(dig(it, "rentPrice", "value")),
                       "czynsz_pln", "czynsz")
+        czynsz_max = None if "czynsz: structured" in notes else costs.get("czynsz_max_pln")
         kaucja = pick(to_float(cval("deposit")), "kaucja_pln", "kaucja")
         for n in cost_notes:
             if n.split(":")[0] in ("media", "prad", "parking"):
@@ -374,7 +375,7 @@ class OtodomParser:
         return Listing(
             source=SOURCE, source_id=str(it.get("id") or ad.get("id")), url=config.OTODOM_AD_URL.format(slug=slug),
             title=(it.get("title") or ad.get("title") or "").strip(), description_text=desc,
-            price_pln=price, czynsz_pln=czynsz, media_pln=costs.get("media_pln"), prad_pln=costs.get("prad_pln"),
+            price_pln=price, czynsz_pln=czynsz, czynsz_max_pln=czynsz_max, media_pln=costs.get("media_pln"), prad_pln=costs.get("prad_pln"),
             kaucja_pln=kaucja, parking_pln=costs.get("parking_pln"), parking=parking, pets=None,
             area_m2=area, rooms=rooms,
             floor=_floor(cval("floor_no")) if cval("floor_no") else _floor(it.get("floorNumber")),

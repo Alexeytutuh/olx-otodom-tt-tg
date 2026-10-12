@@ -178,6 +178,11 @@ Caddyfile `Caddyfile.bak-20261010-181704`, новий код, `docker compose up
    `Garaż: dostępny` / `Miejsce parkingowe: dostępne` (не в Razem); на вулиці, «ogólnodostępne», «nie ma»,
    «brak» → нічого. Нюанс: якщо параметр OLX «Parking» заповнений (і це не «brak»/«na ulicy»), рядок
    з'являється навіть тоді, коли текст парковку заперечує.
+6. **Czynsz діапазоном (2026-10-12).** Текст «czynsz administracyjny …: orientacyjnie 800–1000 zł» давав
+   порожній czynsz: парсер чекав одне число з «zł». Тепер для czynsz діапазон («800–1000 zł», «800-1000 zł»,
+   «od 600 do 700 zł», «1.000 - 1.200 zł») читається як нижня межа + `czynsz_max_pln`; у пості
+   `Czynsz: 800–1000 zł` і `Razem: 3800–4000 zł/mies.` Діапазони інших сум не чіпаються
+   (`parsers/extract.py::_RANGE`, `formatting.zl_range`). Образ до правки: `olx-tiktok-bot:before-czynsz-range`.
 
 ---
 

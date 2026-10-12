@@ -16,6 +16,7 @@ class Listing:
     description_text: str = ""          # HTML stripped, whitespace normalized
     price_pln: Optional[float] = None   # monthly rent asked by owner
     czynsz_pln: Optional[float] = None  # administrative fee; 0 = explicitly included in price
+    czynsz_max_pln: Optional[float] = None  # upper bound when the text gives a range ("800–1000 zł")
     media_pln: Optional[float] = None   # utilities estimate if stated
     prad_pln: Optional[float] = None    # electricity estimate if stated
     kaucja_pln: Optional[float] = None  # deposit

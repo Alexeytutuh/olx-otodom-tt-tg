@@ -46,6 +46,16 @@ def zl(v: float) -> str:
     return f"{fmt_num(v)} zł"
 
 
+def zl_range(v: float, spread: float = 0) -> str:
+    """"800 zł", or "800–1000 zł" when the czynsz is a range (spread = its width)."""
+    return f"{fmt_num(v)}–{zl(v + spread)}" if spread else zl(v)
+
+
+def czynsz_spread(lst: Listing) -> float:
+    c, hi = lst.czynsz_pln, lst.czynsz_max_pln
+    return hi - c if c and hi and hi > c else 0
+
+
 # ----------------------------------------------------------------------------- type / features
 def room_label(rooms: Optional[int]) -> str:
     if rooms == 1:
@@ -229,12 +239,13 @@ def cost_lines(lst: Listing) -> tuple[list[str], Optional[float]]:
         lines.append(f"Cena: {zl(lst.price_pln)}")
         parts.append(lst.price_pln)
     c, m = lst.czynsz_pln, lst.media_pln
+    sp = czynsz_spread(lst)
     if c is not None and m is not None:
-        lines.append("Czynsz + media: " + ("w cenie" if (c + m) == 0 else zl(c + m)))
+        lines.append("Czynsz + media: " + ("w cenie" if (c + m) == 0 else zl_range(c + m, sp)))
         parts += [c, m]
         extra_known = True
     elif c is not None:
-        lines.append("Czynsz: " + ("w cenie" if c == 0 else zl(c)))
+        lines.append("Czynsz: " + ("w cenie" if c == 0 else zl_range(c, sp)))
         parts.append(c)
         extra_known = True
     elif m is not None:
@@ -292,7 +303,7 @@ def post_lines(lst: Listing, today: Optional[dt.date] = None, footer: str = "") 
         out.append(Line(""))
         out += [Line(x) for x in costs]
     if razem is not None:
-        out += [Line(""), Line(f"Razem: {zl(razem)}/mies.", True)]
+        out += [Line(""), Line(f"Razem: {zl_range(razem, czynsz_spread(lst))}/mies.", True)]
     tail = []
     if lst.kaucja_pln is not None:
         tail.append(Line("Kaucja: " + ("brak" if lst.kaucja_pln == 0 else zl(lst.kaucja_pln))))
