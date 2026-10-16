@@ -17,18 +17,18 @@ olx-tiktok/
 │   ├── samples/                приклади постів, слайдів і макетів Telegram з першої версії
 │   ├── olxbot/                 сам бот
 │   │   ├── app.py              потоки, цикл перевірок, кнопки, публікація
-│   │   ├── formatting.py       пост, картка, тексти TikTok, вулиці, витрати
+│   │   ├── formatting.py       пост (укр.), картка, тексти TikTok, хештеги, фішки, вулиці, витрати
 │   │   ├── streets.py          довідник вулиць Вроцлава
 │   │   ├── data/wroclaw_streets.txt     2443 назви з OpenStreetMap
 │   │   ├── tiktok_hook.py      клієнт tiktok-connect
-│   │   ├── slides.py, images.py         слайди 1080×1920, фото, dHash
+│   │   ├── slides.py, images.py         слайди 1080×1920 (4 вигляди обкладинки A–D), фото, dHash
 │   │   ├── telegram.py         клієнт Bot API (паузи, повтори, flood control)
 │   │   ├── storage.py          SQLite
 │   │   ├── dedupe.py           дублікати між OLX і Otodom
 │   │   ├── alerts.py, runtime.py, schedule.py, settings.py
 │   ├── parsers/                парсери OLX і Otodom, фільтри, витяг сум із тексту
 │   │                           (+ README_parsers.md, REVIEW.md, smoke_live.py, cli.py)
-│   ├── tests/                  49 тестів (unittest) + фікстури живих оголошень
+│   ├── tests/                  59 тестів (unittest) + фікстури живих оголошень
 │   ├── tools/                  fake_telegram.py, build_streets.py, render_samples.py, e2e_live.py, build_zip.sh
 │   └── deploy/olx-tiktok-bot.service   альтернатива Docker (systemd), не використовується
 └── tiktok-connect/             tiktok-connect 1.0.0 — контейнер tiktok-connect, порт 8090
@@ -51,14 +51,16 @@ olx-tiktok/
    Парсер повертає нові оголошення → фільтр чорного списку → `find_duplicate` → `send_post`.
    Перший прогін «тихий»: усе поточне позначається баченим.
 2. **`send_post`**: альбом до 10 фото + пост (`build_post`, HTML) у підписі або окремим повідомленням,
-   далі картка (`build_info`) з кнопками `🎬 Згенерувати` / `🏢 Посередник`.
-3. **Кнопки (`handle_callback`)**: `g:` згенерувати, `c:` у канал, `t:` у TikTok, `b:`/`u:`/`r:` чорний
-   список. `g`, `c`, `t` ставляться в чергу `jobs` і виконуються потоком `generator` по одній.
-4. **`generate`**: слайди документами + текст TikTok, під текстом `kb_publish` (📢 / 🎵).
-5. **`publish_channel`**: альбом + той самий пост у `TELEGRAM_CHANNEL_ID`; позначка `published_tg:<id>` у `meta`.
-6. **`push_tiktok`**: слайди генеруються знову (результат той самий) → `TikTokConnectClient.push_draft`
-   → `POST /internal/draft` → `drafts.create_draft` → TikTok `content/init` + опитування статусу;
-   позначка `published_tt:<id>`.
+   далі картка (`build_info`) з кнопками `🎵 В TikTok` / `🏢 Посередник` (`_kb_post`; TikTok-кнопка лише якщо налаштовано).
+3. **Кнопки (`handle_callback`)**: `t:` у TikTok (старе `g:` перетворюється на `t:`), `c:` у канал (лише старі
+   повідомлення й «Повторити в канал»), `b:`/`u:`/`r:` чорний список. `c` і `t` ставляться в чергу `jobs`
+   (ключ `(вид, post_id)`) і виконуються потоком `generator` по одній.
+4. **`publish_channel`**: альбом + той самий пост у `TELEGRAM_CHANNEL_ID`; позначка `published_tg:<id>` у `meta`.
+   При `CHANNEL_AUTOPOST=true` його викликає сам `handle_listing` одразу після надсилання оферти в чат
+   (крім можливих дублів). Помилка автопублікації → попередження в чат із кнопкою «Повторити в канал» (`c:`).
+5. **`push_tiktok`** (кнопка «🎵 В TikTok» одразу, без прев'ю): слайди генеруються й не показуються в чаті →
+   `TikTokConnectClient.push_draft` → `POST /internal/draft` → `drafts.create_draft` → TikTok `content/init` +
+   опитування статусу; позначка `published_tt:<id>`; картку перемальовує `_refresh_card` (завжди за `info_msg_id`).
 
 ## База (SQLite, `/data/bot.sqlite3`)
 
@@ -68,28 +70,28 @@ olx-tiktok/
 
 ## Ключові фрагменти
 
-### Кнопки публікації (`bot/olxbot/app.py`)
+### Кнопки під карткою оферти (`bot/olxbot/app.py`)
 
 ```python
-def kb_publish(post_id: int, channel: bool, tiktok: bool, done_tg: bool = False, done_tt: bool = False) -> Optional[dict]:
-    """Buttons under the generated TikTok text. Pressed ones turn into ✅ (pressing again only reminds)."""
+def kb_post(post_id: int, bl_id: Optional[int] = None, tiktok: bool = False, tiktok_done: bool = False) -> dict:
+    """Buttons under the offer card. The TikTok one (only when configured) turns into ✅ once the draft is sent."""
     row = []
-    if channel:
-        row.append({"text": "✅ В каналі" if done_tg else "📢 В канал", "callback_data": f"c:{post_id}"})
     if tiktok:
-        row.append({"text": "✅ Чернетка TikTok" if done_tt else "🎵 В чернетки TikTok", "callback_data": f"t:{post_id}"})
-    return {"inline_keyboard": [row]} if row else None
+        row.append({"text": "✅ В TikTok" if tiktok_done else "🎵 В TikTok", "callback_data": f"t:{post_id}"})
+    row.append({"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
+               else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"})
+    return {"inline_keyboard": [row]}
 ```
 
-Кнопка показується, лише якщо налаштована: канал — коли `TELEGRAM_CHANNEL_ID` не порожній; TikTok —
-коли `get_sink()` повернув клієнта (є `TIKTOK_CONNECT_ENABLED=true`, URL і токен).
+Клавіатуру картки скрізь будує `Bot._kb_post(post_id)`: вона читає з бази чорний список і `published_tt`, а наявність
+TikTok-кнопки залежить від `get_sink()` (є `TIKTOK_CONNECT_ENABLED=true`, URL і токен).
 
 ### Тексти TikTok (`bot/olxbot/formatting.py`)
 
 ```python
 def tiktok_caption(lst: Listing, today: Optional[dt.date] = None, footer: str = "") -> str:
     """Description under the TikTok carousel: the Telegram post without its first line, which is the title
-    (TikTok drops a description that starts with the title). Plain text, no hashtags."""
+    (TikTok drops a description that starts with the title), plus the hashtags. Plain text."""
     lines = post_lines(lst, today, footer)[1:]
     while lines and not lines[0].text:
         lines = lines[1:]
@@ -99,6 +101,14 @@ def tiktok_caption(lst: Listing, today: Optional[dt.date] = None, footer: str = 
 def tiktok_title(lst: Listing) -> str:
     """Title of the TikTok post: the bold first line of the post ('Kawalerka | 35 m² | taras')."""
 ```
+
+### Фішки, хештеги й вигляди обкладинки (`formatting.py`, `slides.py`)
+
+`highlights(lst)` повертає фішки квартири за пріоритетом `HIGHLIGHT_ORDER` (рідкісне перед тим, що є всюди:
+jacuzzi → taras → ogródek → nowy → remont → park → zielona → cicha → tramwaj → klima → balkon → loggia → garaż → centrum).
+Тераса/балкон/садок/лоджія/гараж беруться з `detect_features`, решта — з `HIGHLIGHT_RX` (регулярки по назві й опису з
+перевіркою заперечень `_NEG`). `slide_texts(lst)` збирає все, що може надрукувати обкладинка; `hashtags(lst)` — теги.
+`slides.pick_style(lst)` = `crc32(dedupe_key) % 4` → 'A'..'D'; `generate(..., style=)` дозволяє примусово (для зразків).
 
 ### Парковка без суми (`bot/olxbot/formatting.py`)
 
@@ -181,7 +191,7 @@ Authorization: Bearer <INTERNAL_TOKEN>
 
 | Набір | Кількість | Що покриває (нове в 1.1.0) |
 |---|---|---|
-| `bot/tests` | 49 | контакти в пості, текст і назва TikTok, картка без поверху/ціни за м²/«Здає», вулиці зі списку й злиті, сума з іншого речення, парковка без суми, кнопки канал/TikTok з ✅ і захистом від повтору, помилка TikTok |
+| `bot/tests` | 59 | контакти в пості, текст і назва TikTok, картка без поверху/ціни за м²/«Здає», вулиці зі списку й злиті, сума з іншого речення, парковка без суми, кнопки канал/TikTok з ✅ і захистом від повтору, помилка TikTok |
 | `tiktok-connect/tests` | 36 | `/internal/draft`: успіх, токен, захист від проксі, вимкнення без токена, поганий запит, помилка TikTok, інші POST = 405 |
 
 Запуск обох наборів — див. «Команди» в [DOCUMENTATION.md](DOCUMENTATION.md#команди). Telegram і TikTok у тестах

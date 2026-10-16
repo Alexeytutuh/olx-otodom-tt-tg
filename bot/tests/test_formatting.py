@@ -22,15 +22,14 @@ class FriendFormat(unittest.TestCase):
     def test_exact_friend_layout(self):
         post = F.build_post(self.friend_example(), TODAY)
         expected = (
-            "Kawalerka | 35 m² | taras\n\nPL | UA | RU | EN\n\nWYNAJEM\n\n"
-            "Do wynajęcia komfortowe mieszkanie\nWrocław | ul. Bulwar Dedala 22\n\n"
-            "Mieszkanie idealne dla pary, singla lub osoby pracującej zdalnie.\n\n"
-            "Cena: 2400 zł\nCzynsz + media: 500 zł\nGaraż: 100 zł\nPrąd: ok. 150 zł\n\n"
-            "Razem: 3150 zł/mies.\n\nKaucja: 3000 zł\nDostępne od: 01.11.2026")
+            "Кавалерка | 35 м² | тераса\n\nPL | UA | RU | EN\n\nОРЕНДА\n\n"
+            "Здається комфортна квартира\nWrocław | ul. Bulwar Dedala 22\n\n"
+            "Ціна: 2400 zł\nЧинш + комунальні: 500 zł\nГараж: 100 zł\nЕлектрика: бл. 150 zł\n\n"
+            "Разом: 3150 zł/міс.\n\nЗастава: 3000 zł\nВільна від: 01.11.2026")
         self.assertEqual(post.plain, expected)
-        self.assertIn("<b>Kawalerka | 35 m² | taras</b>", post.html)
-        self.assertIn("<b>WYNAJEM</b>", post.html)
-        self.assertIn("<b>Razem: 3150 zł/mies.</b>", post.html)
+        self.assertIn("<b>Кавалерка | 35 м² | тераса</b>", post.html)
+        self.assertIn("<b>ОРЕНДА</b>", post.html)
+        self.assertIn("<b>Разом: 3150 zł/міс.</b>", post.html)
         self.assertIsNone(check_html(post.html))
         self.assertTrue(post.fits_caption)
 
@@ -50,21 +49,21 @@ class FriendFormat(unittest.TestCase):
         l = listing("2", rooms=2, area_m2=None, price_pln=3100.0, street=None, district=None,
                     description_text="Ładne mieszkanie, brak balkonu.")
         p = F.build_post(l, TODAY).plain
-        for word in ("Czynsz", "Media", "Garaż", "Prąd", "Razem", "Kaucja", "Dostępne", "m²", "None", "balkon"):
-            self.assertNotIn(word, p.split("PL | UA")[1] if word == "m²" else p, word)
-        self.assertTrue(p.startswith("2 pokoje\n"))
+        for word in ("Чинш", "Комунальні", "Гараж", "Електрика", "Разом", "Застава", "Вільна", "м²", "None", "балкон"):
+            self.assertNotIn(word, p.split("PL | UA")[1] if word == "м²" else p, word)
+        self.assertTrue(p.startswith("2 кімнати\n"))
         self.assertIn("\nWrocław\n", p)
-        self.assertIn("Cena: 3100 zł", p)
+        self.assertIn("Ціна: 3100 zł", p)
         self.assertNotIn("\n\n\n", p)
 
     def test_included_values(self):
         l = listing("3", czynsz_pln=0.0, prad_pln=0.0, parking_pln=0.0, kaucja_pln=0.0,
                     description_text="Parking przy bloku bezpłatny.")
         p = F.build_post(l, TODAY).plain
-        self.assertIn("Czynsz: w cenie", p)
-        self.assertIn("Prąd: w cenie", p)
-        self.assertIn("Miejsce parkingowe: w cenie", p)
-        self.assertIn("Kaucja: brak", p)
+        self.assertIn("Чинш: у вартості", p)
+        self.assertIn("Електрика: у вартості", p)
+        self.assertIn("Паркомісце: у вартості", p)
+        self.assertIn("Застава: немає", p)
 
     def test_available(self):
         self.assertEqual(F.available_text("immediately", TODAY), "od zaraz")
@@ -82,6 +81,8 @@ class FriendFormat(unittest.TestCase):
         self.assertEqual(F.room_label(2), "2 pokoje")
         self.assertEqual(F.room_label(3), "3 pokoje")
         self.assertEqual(F.room_label(None), "Mieszkanie")
+        self.assertEqual([F.room_label_ua(r) for r in (1, 2, 4, 5, None)],
+                         ["Кавалерка", "2 кімнати", "4 кімнати", "5 кімнат", "Квартира"])
         s = {F.template_sentence(r, a) for r, a in ((1, 30), (2, 40), (2, 55), (3, 50), (3, 75), (None, None))}
         self.assertEqual(len(s), 6)
 
@@ -138,23 +139,23 @@ class StreetsAndFeatures(unittest.TestCase):
         post = F.build_post(listing("10", rooms=3, area_m2=60.0, price_pln=3000.0, czynsz_pln=800.0,
                                     czynsz_max_pln=1000.0, media_pln=None, parking_pln=None, prad_pln=None,
                                     kaucja_pln=3000.0), TODAY)
-        self.assertIn("Cena: 3000 zł\nCzynsz: 800–1000 zł\n\nRazem: 3800–4000 zł/mies.", post.plain)
+        self.assertIn("Ціна: 3000 zł\nЧинш: 800–1000 zł\n\nРазом: 3800–4000 zł/міс.", post.plain)
 
     def test_parking_without_price(self):
         def lines(desc, parking=None, price=5000.0):
             return F.cost_lines(listing("9", description_text=desc, parking=parking, parking_pln=None,
                                         czynsz_pln=None, media_pln=None, prad_pln=None, price_pln=price))[0]
-        self.assertIn("Miejsce parkingowe: w cenie", lines(
+        self.assertIn("Паркомісце: у вартості", lines(
             "Udogodnienia: własny balkon oraz prywatne miejsce postojowe. Cena: 5000 PLN — cena stała za wszystko, "
             "bez żadnych dodatkowych opłat za media czy czynsz!", parking="parking strzeżony"))
-        self.assertIn("Garaż: dostępny", lines("Mieszkanie z miejscem w garażu podziemnym."))
+        self.assertIn("Гараж: доступний", lines("Mieszkanie z miejscem w garażu podziemnym."))
         self.assertFalse([x for x in lines("Na terenie osiedla są ogólnodostępne miejsca parkingowe.")
-                          if "parking" in x.lower()])
-        self.assertFalse([x for x in lines("Brak miejsca parkingowego.", parking="brak") if "parking" in x.lower()])
+                          if "паркомісце" in x.lower() or "гараж" in x.lower()])
+        self.assertFalse([x for x in lines("Brak miejsca parkingowego.", parking="brak") if "паркомісце" in x.lower() or "гараж" in x.lower()])
         self.assertFalse([x for x in lines("Miejsca parkingowego nie ma przypisanego do mieszkania.",
-                                           parking="przynależne na ulicy, brak") if "parking" in x.lower()])
+                                           parking="przynależne na ulicy, brak") if "паркомісце" in x.lower() or "гараж" in x.lower()])
         self.assertFalse([x for x in lines("Ładne mieszkanie.", parking="przynależne na ulicy")
-                          if "parking" in x.lower()])
+                          if "паркомісце" in x.lower() or "гараж" in x.lower()])
         _, razem = F.cost_lines(listing("9", description_text="Garaż w cenie najmu.", parking_pln=None,
                                         czynsz_pln=300.0, price_pln=2000.0))
         self.assertEqual(razem, 2300.0)                     # no amount for parking -> not in Razem
@@ -164,7 +165,13 @@ class StreetsAndFeatures(unittest.TestCase):
         foot = "Szczegóły na zapytanie\nZapraszam do kontaktu\nJan Kowalski\n☎️ +48 000"
         post = F.build_post(l, footer=foot)
         self.assertTrue(post.plain.endswith("\n\nSzczegóły na zapytanie\nZapraszam do kontaktu\nJan Kowalski\n☎️ +48 000"))
-        self.assertEqual(F.tiktok_caption(l, footer=foot), post.plain.split("\n", 2)[2])
+        cap = F.tiktok_caption(l, footer=foot)
+        self.assertIn("ідеальн", cap)                                  # TikTok keeps the "ideal for ..." line
+        self.assertNotIn("ідеальн", post.plain)                        # Telegram does not
+        body, tags = cap.rsplit("\n\n", 1)
+        self.assertTrue(body.endswith("Szczegóły na zapytanie\nZapraszam do kontaktu\nJan Kowalski\n☎️ +48 000"))
+        self.assertTrue(tags.startswith("#wroclaw "))
+        self.assertNotIn("#", post.plain)                                                 # Telegram: no hashtags
         self.assertTrue(F.tiktok_caption(l).startswith("PL | UA | RU | EN"))
         self.assertNotIn("Szczegóły", F.build_post(l).plain)
         info = F.build_info(l)
@@ -192,6 +199,79 @@ class StreetsAndFeatures(unittest.TestCase):
         self.assertIsNone(f("Mieszkanie bez balkonu"))
 
 
+class HighlightsHashtagsSlides(unittest.TestCase):
+    def hl(self, txt, **kw):
+        return [h.key for h in F.highlights(listing("9", description_text=txt, **kw))]
+
+    def test_highlights_from_description(self):
+        self.assertEqual(self.hl("Blisko parku Szczytnickiego, cicha i spokojna okolica."), ["park", "cicha"])
+        self.assertEqual(self.hl("Zielona okolica, przystanek tramwajowy 100 m."), ["zielona", "tramwaj"])
+        self.assertEqual(self.hl("Nowy budynek, klimatyzacja i jacuzzi."), ["jacuzzi", "nowy", "klima"])
+        self.assertEqual(self.hl("Mieszkanie po remoncie, z tarasem."), ["taras", "remont"])
+        self.assertEqual(self.hl("Blisko centrum, ale nie centrum handlowe."), ["centrum"])
+        self.assertEqual(self.hl("Blisko Centrum Handlowego Magnolia."), [])
+
+    def test_highlights_false_friends(self):
+        self.assertEqual(self.hl("Blisko Magnolia Park, parking dla gości."), [])           # estate name, not a park
+        self.assertEqual(self.hl("Po remoncie ul. Buforowej wygodny dojazd."), [])          # the street was repaired
+        self.assertEqual(self.hl("Do Rynku 10 minut tramwajem."), [])                       # a ride, not a stop nearby
+        self.assertEqual(self.hl("Bez klimatyzacji, brak tarasu."), [])
+        self.assertEqual(self.hl("Do remontu, do wyremontowania."), [])
+
+    def test_slide_texts(self):
+        l = listing("9", rooms=3, area_m2=60.0, price_pln=3000.0, district="Krzyki / Tarnogaj", street="ul. Balonowa",
+                    description_text="Blisko parku, taras.")
+        t = F.slide_texts(l)
+        self.assertEqual((t.city, t.bottom, t.price), ("Вроцлав (Tarnogaj)", "Тераса", "3000 zł/міс."))
+        self.assertEqual(t.short, ["Тераса", "Парк"])
+        self.assertEqual(t.where, "Вроцлав, ul. Balonowa")
+        self.assertIn("3 кімнати | 60\u00a0м² | Вроцлав", t.top)
+        # nothing special -> the district, as written (no translation); no district -> the price
+        t = F.slide_texts(listing("9", description_text="Ładne mieszkanie.", district="Krzyki / Huby"))
+        self.assertEqual((t.bottom, t.short), ("Huby", []))
+        t = F.slide_texts(listing("9", description_text="Ładne mieszkanie.", district=None, street=None))
+        self.assertEqual(t.bottom, "2400 zł/міс.")
+
+    def test_hashtags(self):
+        l = listing("9", rooms=3, district="Krzyki / Tarnogaj", description_text="Z tarasem, blisko parku.")
+        tags = F.hashtags(l)
+        self.assertEqual(tags[:3], ["#wroclaw", "#wynajem", "#mieszkaniewroclaw"])
+        self.assertTrue({"#3pokoje", "#krzyki", "#tarnogaj", "#taras", "#park"} <= set(tags))
+        self.assertEqual(len(tags), len(set(tags)))
+        self.assertEqual(tags, F.hashtags(l))                      # stable: slides/caption are generated twice
+        self.assertEqual(F._tag("Śródmieście"), "#srodmiescie")
+        self.assertEqual(F._tag("Psie Pole"), "#psiepole")
+        self.assertIn("#kawalerka", F.hashtags(listing("9", rooms=1)))
+        pools = {tuple(t for t in F.hashtags(listing(str(i), rooms=2)) if t in F.POOL_TAGS) for i in range(40)}
+        self.assertGreater(len(pools), 3)                          # different flats, different pool picks
+
+    def test_cover_styles(self):
+        import tempfile
+        from pathlib import Path
+        from PIL import Image
+        from olxbot import slides
+        from tests.helpers import fake_download
+        self.assertEqual({slides.pick_style(listing(str(i))) for i in range(200)}, set(slides.STYLES))
+        l = listing("9", rooms=3, area_m2=60.0, district="Krzyki", description_text="Taras, klimatyzacja, tramwaj.")
+        self.assertEqual(slides.pick_style(l), slides.pick_style(l))                 # same flat, same cover
+        with tempfile.TemporaryDirectory() as tmp:
+            for st in slides.STYLES:
+                paths = slides.generate(l, Path(tmp) / st, 2, fetch=lambda u: fake_download(u), style=st)
+                self.assertEqual(len(paths), 2, st)
+                im = Image.open(paths[0])
+                self.assertEqual(im.size, (1080, 1920), st)
+                im.close()
+            a = Image.open(Path(tmp) / "A" / "slide_01.jpg").tobytes()
+            for st in "BCD":
+                self.assertNotEqual(a, Image.open(Path(tmp) / st / "slide_01.jpg").tobytes(), st)
+        # the longest labels still render in every style
+        long_l = listing("9", rooms=3, area_m2=60.0, district="Przedmieście Oławskie",
+                         street="al. Generała Józefa Hallera 12", description_text="Taras, klimatyzacja, tramwaj.")
+        t = F.slide_texts(long_l)
+        for st in slides.STYLES:
+            slides.render_cover(Image.new("RGB", (1200, 1600), "gray"), t, st).close()
+
+
 class LiveListings(unittest.TestCase):
     """Real normalized listings from both parsers (captured 2026-10-09)."""
 
@@ -205,13 +285,13 @@ class LiveListings(unittest.TestCase):
             self.assertNotIn("nan", post.plain.lower().replace("nancy", ""), l.url)
             self.assertIsNone(check_html(post.html), l.url)
             self.assertEqual(html_plain(post.html), post.plain)
-            self.assertTrue(post.plain.startswith(F.room_label(l.rooms)), l.url)
+            self.assertTrue(post.plain.startswith(F.room_label_ua(l.rooms)), l.url)
             self.assertIn("\nPL | UA | RU | EN\n", post.plain)
-            self.assertIn(f"Cena: {F.fmt_num(l.price_pln)} zł", post.plain)
+            self.assertIn(f"Ціна: {F.fmt_num(l.price_pln)} zł", post.plain)
             if l.kaucja_pln is None:
-                self.assertNotIn("Kaucja", post.plain)
+                self.assertNotIn("Застава", post.plain)
             if l.czynsz_pln is None and l.media_pln is None:
-                self.assertNotIn("Czynsz", post.plain)
+                self.assertNotIn("Чинш", post.plain)
             self.assertLessEqual(F.utf16_len(post.plain), 1024)
             info = F.build_info(l)
             self.assertIsNone(check_html(info), l.url)
@@ -219,13 +299,20 @@ class LiveListings(unittest.TestCase):
             cap = F.tiktok_caption(l, TODAY)
             self.assertLessEqual(F.utf16_len(cap), 4000)
             self.assertNotRegex(cap, r"</?b>|\*\*")
-            self.assertEqual(cap, post.plain.split("\n", 2)[2])   # post without the title line, no hashtags
-            self.assertNotIn("#", cap)
+            body, tags = cap.rsplit("\n\n", 1)
+            want = F.post_lines(l, TODAY, intro_sentence=True)[1:]       # no title line; with the "ideal for" line
+            while want and not want[0].text:
+                want = want[1:]
+            self.assertEqual(body, F.render_plain(want))
+            self.assertNotIn("ідеальн", post.plain, l.url)                 # Telegram post has no such line
+            self.assertIn("ідеальн", cap, l.url)
+            self.assertTrue(tags.startswith("#wroclaw #wynajem") and "#" not in post.plain, l.url)
+            self.assertEqual(cap, F.tiktok_caption(l, TODAY))      # same text when generated again
             self.assertNotIn("Продавець", info)
             self.assertNotIn("zł/m²", info)
             self.assertLessEqual(F.utf16_len(F.tiktok_title(l)), 90)
             top, bottom = F.slide_labels(l)
-            self.assertIn("Wrocław", top)
+            self.assertIn("Вроцлав", top)
             self.assertTrue(bottom)
 
     def test_razem_matches_components_on_live(self):

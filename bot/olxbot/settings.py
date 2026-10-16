@@ -50,10 +50,11 @@ class Settings:
     max_album_photos: int = 10
     max_slides: int = 10
     startup_summary: bool = True
-    tiktok_connect_enabled: bool = False      # "🎵 В чернетки TikTok" button, see olxbot/tiktok_hook.py
+    tiktok_connect_enabled: bool = False      # "🎵 В TikTok" button (draft at once), see olxbot/tiktok_hook.py
     tiktok_connect_url: str = ""
     tiktok_connect_token: str = ""            # = INTERNAL_TOKEN of tiktok-connect
-    channel_id: str = ""                      # "📢 В канал" button: -100... or @username; empty = no button
+    channel_id: str = ""                      # channel for CHANNEL_AUTOPOST: -100... or @username
+    channel_autopost: bool = False            # every new offer goes to the channel at once (not possible duplicates)
     post_footer: str = ""                     # contact lines at the end of every post ("\n" = new line)
     log_level: str = "INFO"
     send_delay_s: float = 1.1                 # min gap between two messages in one chat
@@ -99,6 +100,7 @@ def load() -> Settings:
     s.tiktok_connect_url = os.environ.get("TIKTOK_CONNECT_URL", "").strip()
     s.tiktok_connect_token = os.environ.get("TIKTOK_CONNECT_TOKEN", "").strip()
     s.channel_id = os.environ.get("TELEGRAM_CHANNEL_ID", "").strip()
+    s.channel_autopost = _bool("CHANNEL_AUTOPOST", False)
     s.post_footer = os.environ.get("POST_FOOTER", "").strip().replace("\\n", "\n")
     s.log_level = os.environ.get("LOG_LEVEL", "INFO").strip().upper() or "INFO"
     s.max_runs = _int("MAX_RUNS", 0)

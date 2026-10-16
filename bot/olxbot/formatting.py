@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import datetime as dt
 import html
+import random
 import re
-from dataclasses import dataclass
+import unicodedata
+import zlib
+from dataclasses import dataclass, field
 from typing import Optional
 
 from parsers.models import Listing
@@ -25,6 +28,18 @@ TIKTOK_CAPTION_LIMIT = 4000   # TikTok photo-post description (UTF-16 units)
 TIKTOK_TITLE_LIMIT = 90       # TikTok photo-post title (UTF-16 units)
 
 SOURCE_NAMES = {"olx": "OLX", "otodom": "Otodom"}
+
+# The post (Telegram + TikTok description) and the slides are Ukrainian. Only street and district names stay as
+# written in the listing (Polish). One place for every fixed phrase of the post:
+UA = {
+    "rent": "ОРЕНДА", "intro": "Здається комфортна квартира",
+    "price": "Ціна", "czynsz": "Чинш", "czynsz_media": "Чинш + комунальні", "media": "Комунальні",
+    "power": "Електрика", "total": "Разом", "month": "/міс.", "approx": "бл.",
+    "garage": "Гараж", "parking": "Паркомісце", "garage_avail": "доступний", "parking_avail": "доступне",
+    "deposit": "Застава", "included": "у вартості", "none": "немає",
+    "avail_now": "Вільна одразу", "avail_from": "Вільна від",
+    "studio": "Кавалерка", "flat": "Квартира",
+}
 
 
 def utf16_len(s: str) -> int:
@@ -65,6 +80,16 @@ def room_label(rooms: Optional[int]) -> str:
     if rooms and rooms >= 5:
         return f"{rooms} pokoi"
     return "Mieszkanie"
+
+
+def room_label_ua(rooms: Optional[int]) -> str:
+    if rooms == 1:
+        return UA["studio"]
+    if rooms in (2, 3, 4):
+        return f"{rooms} кімнати"
+    if rooms and rooms >= 5:
+        return f"{rooms} кімнат"
+    return UA["flat"]
 
 
 _NEG = re.compile(r"\b(?:bez|brak\w*|nie ma|nie posiada\w*|nie posiadamy)\b[^\n.,;]{0,12}$", re.I)
@@ -109,6 +134,72 @@ def key_feature(lst: Listing) -> Optional[str]:
 
 def feature_display(key: str) -> str:
     return {k: d for k, d, _ in FEATURES}.get(key, key.capitalize())
+
+
+FEATURE_UA = {"taras": "тераса", "ogródek": "садок", "balkon": "балкон", "loggia": "лоджія", "garaż": "гараж"}
+
+# ----------------------------------------------------------------------------- highlights (slides, hashtags)
+_NEAR = r"(?:blisko|obok|niedaleko|w pobliżu|pobliżu|sąsiedztwie|tuż (?:obok|przy)|przy|nad|naprzeciw(?:ko)?)"
+# key -> (label for the slide (Ukrainian), short label for a list, hashtag, regex over title + description)
+# The outdoor spaces (taras, ogródek, balkon, loggia, garaż) come from detect_features, not from here.
+HIGHLIGHT_RX = {
+    "jacuzzi": ("Джакузі", "Джакузі", "#jacuzzi", re.compile(r"\bja[ck]uzzi\b|\bjakuzi\b", re.I)),
+    "nowy": ("Новобудова", "Новобудова", "#nowebudownictwo", re.compile(
+        r"\bnow(?:e|ego|ym)\s+budownictw\w*|\bnowy\s+budynek|\bnowym\s+budynku|\bnowobudowan\w*|\bnow(?:a|ej)\s+inwestycj\w*|"
+        r"\bnow(?:e|ym)\s+osiedl\w*", re.I)),
+    "remont": ("Після ремонту", "Ремонт", "#poremoncie", re.compile(
+        r"\bpo\s+(?:(?:świeżym|generalnym|gruntownym|całkowitym|kapitalnym)\s+)?remoncie(?!\s+(?:ul|al|pl|os)\b)|"
+        r"\b(?:świeżo\s+)?(?:wyremontowan(?:e|a|y|ym|ej|ego)|odnowion\w*)\b|\bpo\s+renowacji", re.I)),
+    "park": ("Поруч парк", "Парк", "#park", re.compile(
+        # lower-case 'park' only: 'Magnolia Park' is the name of an estate
+        rf"\b{_NEAR}\s+(?:\w+\s+){{0,2}}(?-i:park(?:u|iem|owi|i|ów)?)\b|\botoczen\w+\s+(?:\w+\s+)?(?:zieleni|parku)", re.I)),
+    "zielona": ("Зелена місцевість", "Зелень", "#zielenwmiescie", re.compile(
+        r"\bzielon\w+\s+(?:okolic|dzielnic|osiedl|lokalizacj|ulic)\w*|\b(?:dużo|mnóstwo|pełno)\s+zieleni|\bw\s+zieleni|"
+        r"\botoczon\w+\s+zieleni\w*", re.I)),
+    "cicha": ("Тиха місцевість", "Тиша", "#cichaokolica", re.compile(
+        r"\b(?:cich\w+|spokojn\w+)(?:\s+i\s+(?:cich|spokojn)\w+)?\s+(?:\w+\s+)?(?:okolic|dzielnic|osiedl|ulic|lokalizacj|rejon)\w*",
+        re.I)),
+    # a stop / the tram 'nearby', not 'ten minutes by tram to the Rynek'
+    "tramwaj": ("Поруч трамвай", "Трамвай", "#tramwaj", re.compile(
+        rf"\bprzystan\w*\s+(?:\w+\s+){{0,2}}tramwaj\w*|\btramwaj\w*\s+(?:pod|przy|obok)\b|"
+        rf"\b{_NEAR}\s+(?:\w+\s+){{0,2}}tramwaj\w*", re.I)),
+    "klima": ("Кондиціонер", "Кондиціонер", "#klimatyzacja", re.compile(r"\bklimatyzacj\w*|\bklima\b", re.I)),
+    "centrum": ("Біля центру", "Центр", "#blizkocentrum", re.compile(
+        r"\b(?:blisko|niedaleko|w pobliżu|tuż (?:obok|przy)|w sercu|w bliskim sąsiedztwie)\s+(?:\w+\s+){0,2}"
+        r"(?:centrum(?!\s+handlow)|rynku|starego miasta)", re.I)),
+}
+FEATURE_TAGS = {"taras": "#taras", "ogródek": "#ogrodek", "balkon": "#balkon", "loggia": "#loggia", "garaż": "#garaz"}
+# What goes on the slide first. Rare things win over the ones every flat has (balkon).
+HIGHLIGHT_ORDER = ["jacuzzi", "taras", "ogródek", "nowy", "remont", "park", "zielona", "cicha", "tramwaj", "klima",
+                   "balkon", "loggia", "garaż", "centrum"]
+
+
+@dataclass
+class Highlight:
+    key: str
+    label: str        # bottom caption of the cover ('Поруч парк')
+    short: str        # for lists on the cover ('Парк')
+    tag: str          # hashtag
+
+
+def highlights(lst: Listing) -> list[Highlight]:
+    """What is interesting about the flat, most striking first. Read from the description (and Otodom extras)."""
+    text = f"{lst.title}\n{lst.description_text or ''}"
+    found = set(detect_features(lst))
+    for key, (_, _, _, rx) in HIGHLIGHT_RX.items():
+        if _mentions(rx, text):
+            found.add(key)
+    out = []
+    for key in HIGHLIGHT_ORDER:
+        if key not in found:
+            continue
+        if key in HIGHLIGHT_RX:
+            label, short, tag, _ = HIGHLIGHT_RX[key]
+        else:
+            label = short = FEATURE_UA[key].capitalize()
+            tag = FEATURE_TAGS[key]
+        out.append(Highlight(key, label, short, tag))
+    return out
 
 
 # ----------------------------------------------------------------------------- location
@@ -183,16 +274,16 @@ def location_line(lst: Listing) -> str:
 def template_sentence(rooms: Optional[int], area: Optional[float]) -> str:
     a = area or 0
     if rooms == 1 or (rooms is None and 0 < a < 35):
-        return "Mieszkanie idealne dla pary, singla lub osoby pracującej zdalnie."
+        return "Квартира ідеально підходить для пари, одинака або тих, хто працює віддалено."
     if rooms == 2:
         if a and a < 45:
-            return "Mieszkanie idealne dla pary lub dwóch osób pracujących."
-        return "Przestronne mieszkanie idealne dla pary lub małej rodziny."
+            return "Квартира ідеально підходить для пари або двох працюючих."
+        return "Простора квартира, ідеальна для пари або невеликої родини."
     if rooms == 3:
         if a and a < 60:
-            return "Mieszkanie idealne dla rodziny lub współlokatorów."
-        return "Przestronne mieszkanie idealne dla rodziny z dziećmi lub współlokatorów."
-    return "Mieszkanie idealne dla pary lub rodziny."
+            return "Квартира ідеально підходить для родини або співмешканців."
+        return "Простора квартира, ідеальна для родини з дітьми або співмешканців."
+    return "Квартира ідеально підходить для пари або родини."
 
 
 # ----------------------------------------------------------------------------- costs
@@ -201,6 +292,10 @@ def _parking_label(lst: Listing) -> str:
     if re.search(r"gara[żz]|hal\w* gara", t):
         return "Garaż"
     return "Miejsce parkingowe"
+
+
+def _parking_label_ua(lst: Listing) -> str:
+    return UA["garage"] if _parking_label(lst) == "Garaż" else UA["parking"]
 
 
 _PARKING_TEXT = re.compile(r"\bgara[żz]\w*|\bmiejsc\w* (?:postojow|parkingow)\w*|\bhal\w* gara[żz]ow\w*|"
@@ -213,7 +308,7 @@ _ALL_INCLUSIVE = re.compile(r"za wszystko|wszystko w cenie|wszystko wliczon|bez 
 
 
 def parking_without_price(lst: Listing) -> Optional[str]:
-    """Parking is offered but no amount was found: 'w cenie' (all-inclusive price) or 'dostępne'. None = no parking."""
+    """Parking is offered but no amount was found: 'у вартості' (all-inclusive price) or 'доступне'. None = no parking."""
     param = (lst.parking or "").lower()
     text = f"{lst.title}\n{lst.description_text or ''}"
     offered = bool(param) and not re.search(r"brak|ulic", param)
@@ -226,8 +321,8 @@ def parking_without_price(lst: Listing) -> Optional[str]:
     if not offered:
         return None
     if _ALL_INCLUSIVE.search(text):
-        return "w cenie"
-    return "dostępny" if _parking_label(lst) == "Garaż" else "dostępne"
+        return UA["included"]
+    return UA["garage_avail"] if _parking_label(lst) == "Garaż" else UA["parking_avail"]
 
 
 def cost_lines(lst: Listing) -> tuple[list[str], Optional[float]]:
@@ -235,31 +330,32 @@ def cost_lines(lst: Listing) -> tuple[list[str], Optional[float]]:
     lines: list[str] = []
     parts: list[float] = []
     extra_known = False
+    inc = UA["included"]
     if lst.price_pln:
-        lines.append(f"Cena: {zl(lst.price_pln)}")
+        lines.append(f"{UA['price']}: {zl(lst.price_pln)}")
         parts.append(lst.price_pln)
     c, m = lst.czynsz_pln, lst.media_pln
     sp = czynsz_spread(lst)
     if c is not None and m is not None:
-        lines.append("Czynsz + media: " + ("w cenie" if (c + m) == 0 else zl_range(c + m, sp)))
+        lines.append(f"{UA['czynsz_media']}: " + (inc if (c + m) == 0 else zl_range(c + m, sp)))
         parts += [c, m]
         extra_known = True
     elif c is not None:
-        lines.append("Czynsz: " + ("w cenie" if c == 0 else zl_range(c, sp)))
+        lines.append(f"{UA['czynsz']}: " + (inc if c == 0 else zl_range(c, sp)))
         parts.append(c)
         extra_known = True
     elif m is not None:
-        lines.append("Media: " + ("w cenie" if m == 0 else zl(m)))
+        lines.append(f"{UA['media']}: " + (inc if m == 0 else zl(m)))
         parts.append(m)
         extra_known = True
     if lst.parking_pln is not None:
-        lines.append(f"{_parking_label(lst)}: " + ("w cenie" if lst.parking_pln == 0 else zl(lst.parking_pln)))
+        lines.append(f"{_parking_label_ua(lst)}: " + (inc if lst.parking_pln == 0 else zl(lst.parking_pln)))
         parts.append(lst.parking_pln)
         extra_known = True
     elif (pk := parking_without_price(lst)):
-        lines.append(f"{_parking_label(lst)}: {pk}")              # no amount -> not in Razem
+        lines.append(f"{_parking_label_ua(lst)}: {pk}")              # no amount -> not in Razem
     if lst.prad_pln is not None:
-        lines.append("Prąd: " + ("w cenie" if lst.prad_pln == 0 else f"ok. {zl(lst.prad_pln)}"))
+        lines.append(f"{UA['power']}: " + (inc if lst.prad_pln == 0 else f"{UA['approx']} {zl(lst.prad_pln)}"))
         parts.append(lst.prad_pln)
         extra_known = True
     razem = sum(parts) if (lst.price_pln and extra_known) else None
@@ -288,28 +384,31 @@ class Line:
     bold: bool = False
 
 
-def post_lines(lst: Listing, today: Optional[dt.date] = None, footer: str = "") -> list[Line]:
-    head = [room_label(lst.rooms)]
+def post_lines(lst: Listing, today: Optional[dt.date] = None, footer: str = "",
+               intro_sentence: bool = True) -> list[Line]:
+    """intro_sentence: the line "ideal for a couple / family" - only in the TikTok description, not in Telegram."""
+    head = [room_label_ua(lst.rooms)]
     if lst.area_m2:
-        head.append(f"{fmt_num(lst.area_m2)} m²")
+        head.append(f"{fmt_num(lst.area_m2)} м²")
     feat = key_feature(lst)
     if feat:
-        head.append(feat)
-    out = [Line(" | ".join(head), True), Line(""), Line(LANG_LINE), Line(""), Line("WYNAJEM", True), Line(""),
-           Line("Do wynajęcia komfortowe mieszkanie"), Line(location_line(lst)), Line(""),
-           Line(template_sentence(lst.rooms, lst.area_m2))]
+        head.append(FEATURE_UA.get(feat, feat))
+    out = [Line(" | ".join(head), True), Line(""), Line(LANG_LINE), Line(""), Line(UA["rent"], True), Line(""),
+           Line(UA["intro"]), Line(location_line(lst))]
+    if intro_sentence:
+        out += [Line(""), Line(template_sentence(lst.rooms, lst.area_m2))]
     costs, razem = cost_lines(lst)
     if costs:
         out.append(Line(""))
         out += [Line(x) for x in costs]
     if razem is not None:
-        out += [Line(""), Line(f"Razem: {zl_range(razem, czynsz_spread(lst))}/mies.", True)]
+        out += [Line(""), Line(f"{UA['total']}: {zl_range(razem, czynsz_spread(lst))}{UA['month']}", True)]
     tail = []
     if lst.kaucja_pln is not None:
-        tail.append(Line("Kaucja: " + ("brak" if lst.kaucja_pln == 0 else zl(lst.kaucja_pln))))
+        tail.append(Line(f"{UA['deposit']}: " + (UA["none"] if lst.kaucja_pln == 0 else zl(lst.kaucja_pln))))
     av = available_text(lst.available_from, today)
     if av:
-        tail.append(Line(f"Dostępne {av}" if av == "od zaraz" else f"Dostępne od: {av}"))
+        tail.append(Line(UA["avail_now"] if av == "od zaraz" else f"{UA['avail_from']}: {av}"))
     if tail:
         out.append(Line(""))
         out += tail
@@ -339,7 +438,7 @@ class Post:
 
 
 def build_post(lst: Listing, today: Optional[dt.date] = None, footer: str = "") -> Post:
-    lines = post_lines(lst, today, footer)
+    lines = post_lines(lst, today, footer, intro_sentence=False)          # Telegram post: no "ideal for ..." line
     return Post(render_html(lines), render_plain(lines))
 
 
@@ -391,16 +490,51 @@ def build_info(lst: Listing, dup: Optional[dict] = None, blacklisted: bool = Fal
 
 
 # ----------------------------------------------------------------------------- TikTok
+BASE_TAGS = ["#wroclaw", "#wynajem", "#mieszkaniewroclaw"]
+POOL_TAGS = ["#mieszkanienawynajem", "#nieruchomosci", "#wynajemmieszkania", "#wynajemwroclaw",
+             "#wroclawnieruchomosci", "#szukammieszkania"]
+POOL_PICK = 2
+
+
+def _tag(word: str) -> str:
+    """'Śródmieście' -> '#srodmiescie' (hashtags are written without diacritics and spaces)."""
+    s = word.lower().replace("ł", "l")
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(c for c in s if c.isalnum() and not unicodedata.combining(c))
+    return f"#{s}" if s else ""
+
+
+def hashtags(lst: Listing) -> list[str]:
+    """Hashtags for the TikTok description: fixed core, rooms, district(s), what is special about the flat and two
+    from a pool. The pool pick is seeded by the listing, so regenerating gives the same text."""
+    tags = list(BASE_TAGS)
+    if lst.rooms == 1:
+        tags.append("#kawalerka")
+    elif lst.rooms and lst.rooms >= 2:
+        tags.append(f"#{lst.rooms}pokoje" if lst.rooms <= 4 else f"#{lst.rooms}pokoi")
+    parts = [p.strip() for p in (lst.district or "").split("/") if p.strip()]
+    tags += [_tag(p) for p in parts[:2]]
+    tags += [h.tag for h in highlights(lst)[:3]]
+    rnd = random.Random(zlib.crc32(lst.dedupe_key.encode()))
+    tags += rnd.sample(POOL_TAGS, POOL_PICK)
+    out: list[str] = []
+    for t in tags:
+        if t and t not in out:
+            out.append(t)
+    return out
+
+
 def tiktok_caption(lst: Listing, today: Optional[dt.date] = None, footer: str = "") -> str:
     """Description under the TikTok carousel: the Telegram post without its first line, which is the title
-    (TikTok drops a description that starts with the title). Plain text, no hashtags."""
+    (TikTok drops a description that starts with the title), plus the hashtags. Plain text."""
     lines = post_lines(lst, today, footer)[1:]
     while lines and not lines[0].text:
         lines = lines[1:]
+    tags = " ".join(hashtags(lst))
     text = render_plain(lines)
-    while utf16_len(text) > TIKTOK_CAPTION_LIMIT:      # practically never
+    while utf16_len(text) + utf16_len(tags) + 2 > TIKTOK_CAPTION_LIMIT:      # practically never
         text = text[: len(text) - 50]
-    return text
+    return f"{text}\n\n{tags}" if tags else text
 
 
 def tiktok_title(lst: Listing) -> str:
@@ -411,12 +545,33 @@ def tiktok_title(lst: Listing) -> str:
     return title
 
 
-def slide_labels(lst: Listing) -> tuple[str, str]:
-    top = [room_label(lst.rooms)]
+@dataclass
+class SlideTexts:
+    """Everything the cover slide may print. Ukrainian; only street and district stay as written in the listing."""
+    top: str                  # '3 кімнати | 60 м² | Вроцлав (Krzyki)'
+    bottom: str               # best highlight, else the district, else the price
+    city: str                 # 'Вроцлав (Krzyki)'
+    kind: str                 # '3 кімнати | 60 м²'
+    price: Optional[str]      # '3000 zł/міс.'
+    short: list[str] = field(default_factory=list)   # up to 3 short highlights: ['Тераса', 'Кондиціонер', 'Гараж']
+    where: str = "Вроцлав"    # 'Вроцлав, ul. Balonowa' or 'Вроцлав, Krzyki'
+
+
+def slide_texts(lst: Listing) -> SlideTexts:
+    kind = [room_label_ua(lst.rooms)]
     if lst.area_m2:
-        top.append(f"{fmt_num(lst.area_m2)} m²")
+        kind.append(f"{fmt_num(lst.area_m2)}\u00a0м²")      # no line break between the number and the unit
     d = district_short(lst)
-    top.append(f"Wrocław ({d})" if d else "Wrocław")
-    feat = key_feature(lst)
-    bottom = feature_display(feat) if feat else (f"{zl(lst.price_pln)}/mies." if lst.price_pln else "Do wynajęcia")
-    return " | ".join(top), bottom
+    city = f"Вроцлав ({d})" if d else "Вроцлав"
+    price = f"{zl(lst.price_pln)}{UA['month']}" if lst.price_pln else None
+    hl = highlights(lst)
+    street = normalize_street(lst)
+    bottom = hl[0].label if hl else (d or price or "Здається")
+    where = f"Вроцлав, {street}" if street else (f"Вроцлав, {d}" if d else "Вроцлав")
+    return SlideTexts(top=" | ".join(kind + [city]), bottom=bottom, city=city, kind=" | ".join(kind), price=price,
+                      short=[h.short for h in hl[:3]], where=where)
+
+
+def slide_labels(lst: Listing) -> tuple[str, str]:
+    t = slide_texts(lst)
+    return t.top, t.bottom

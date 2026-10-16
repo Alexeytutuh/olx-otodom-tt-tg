@@ -119,7 +119,7 @@ def telegram_mock(post_html: str, info_html: str, thumbs: list[Image.Image], pat
         d.text((pad + 8, y), t, font=small, fill=(40, 40, 40))
         y += 20
     bw = (W - 2 * pad - 8) // 2
-    for i, label in enumerate(("Згенерувати", "Посередник")):
+    for i, label in enumerate(("Посередник",)):
         x = pad + i * (bw + 8)
         d.rounded_rectangle([x, y + 6, x + bw, y + 38], 10, fill=(120, 150, 100))
         d.text((x + bw // 2, y + 22), label, font=reg, fill="white", anchor="mm")

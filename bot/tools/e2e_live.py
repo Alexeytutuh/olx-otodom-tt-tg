@@ -126,13 +126,12 @@ def main():
         with st.lock:
             info_msgs = [c for c in st.calls if c["method"] == "sendMessage"
                          and (c["params"].get("reply_markup") or {}).get("inline_keyboard")
-                         and c["params"]["reply_markup"]["inline_keyboard"][0][0]["callback_data"].startswith("g:")]
+                         and c["params"]["reply_markup"]["inline_keyboard"][0][-1]["callback_data"].startswith("b:")]
         print(f"cycle 2: {len(info_msgs)} posts with buttons", flush=True)
         assert info_msgs, "cycle 2 must post the forgotten listings"
         oto = [m for m in info_msgs if "Otodom</b>" in m["params"]["text"]]
         report["otodom_posts"] = len(oto)
-        g_id = (oto or info_msgs)[0]["params"]["reply_markup"]["inline_keyboard"][0][0]["callback_data"]
-        b_id = info_msgs[-1]["params"]["reply_markup"]["inline_keyboard"][0][1]["callback_data"]
+        b_id = info_msgs[-1]["params"]["reply_markup"]["inline_keyboard"][0][-1]["callback_data"]
         msg_ids = {}
         with st.lock:
             for mid, m in st.messages.items():
@@ -140,7 +139,7 @@ def main():
                 for row in rm.get("inline_keyboard", []):
                     for b in row:
                         msg_ids[b.get("callback_data")] = mid
-        for cid, data in (("cbq-gen", g_id), ("cbq-bl", b_id)):
+        for cid, data in (("cbq-bl", b_id),):
             ctl(api, "update", {"callback_query": {"id": cid, "from": {"id": OWNER}, "data": data,
                                                    "message": {"message_id": msg_ids[data],
                                                                "chat": {"id": OWNER, "type": "private"}}}})
@@ -148,8 +147,6 @@ def main():
                                         "text": "/status"}})
         ctl(api, "update", {"message": {"message_id": 3, "chat": {"id": 999, "type": "private"},
                                         "text": "/status"}})          # stranger: must be ignored
-        wait_for(lambda: [c for c in st.calls if c["method"] == "sendMediaGroup"
-                          and c["params"]["media"][0]["type"] == "document"], 180, "slides as documents")
         wait_for(lambda: proc.poll() is not None, a.interval * 2 + 400, "bot exit after MAX_RUNS")
     finally:
         if proc.poll() is None:
@@ -164,9 +161,6 @@ def main():
     methods = {}
     for c in allc:
         methods[c["method"]] = methods.get(c["method"], 0) + 1
-    docs = [c for c in allc if c["method"] == "sendMediaGroup" and c["params"]["media"][0]["type"] == "document"]
-    slides = docs[0]["stored"] if docs else []
-    caption_msgs = [c for c in allc if c["method"] == "sendMessage" and "#wroclaw" in c["params"].get("text", "")]
     edits = [c for c in allc if c["method"] == "editMessageText"]
     status = [c["params"]["text"] for c in allc if c["method"] == "sendMessage" and "Стан бота" in c["params"]["text"]]
     fallback = [c for c in allc if c["method"] == "sendMediaGroup" and c.get("injected_error")]
@@ -176,8 +170,6 @@ def main():
         "methods": methods, "forgotten": report.get("forgotten"), "otodom_posts": report.get("otodom_posts"),
         "album_fallback_injected": len(fallback),
         "photo_fallback_used": methods.get("sendPhoto", 0),
-        "slides": [(s.get("width"), s.get("height"), s.get("format"), s.get("size")) for s in slides],
-        "tiktok_caption_chars": len(caption_msgs[0]["params"]["text"]) if caption_msgs else None,
         "blacklist_edit": bool(edits and "Позначено як посередника" in edits[-1]["params"]["text"]),
         "status_reply": status[0] if status else None,
         "stranger_answered": bool(to_stranger),
@@ -186,9 +178,8 @@ def main():
     }
     json.dump(res, open(out / "result.json", "w"), ensure_ascii=False, indent=1)
     print(json.dumps(res, ensure_ascii=False, indent=1))
-    ok = (res["exit_code"] == 0 and res["slides"] and all(s[:3] == (1080, 1920, "JPEG") for s in res["slides"])
-          and res["blacklist_edit"] and res["status_reply"] and not res["stranger_answered"]
-          and res["album_fallback_injected"] == 1 and res["tiktok_caption_chars"])
+    ok = (res["exit_code"] == 0 and res["blacklist_edit"] and res["status_reply"] and not res["stranger_answered"]
+          and res["album_fallback_injected"] == 1)           # slides / TikTok draft are covered by the unit tests
     print("E2E", "PASSED" if ok else "FAILED")
     return 0 if ok else 1
 

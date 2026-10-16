@@ -23,8 +23,7 @@ from parsers.models import Listing
 from . import __version__, images, slides
 from .alerts import AlertState
 from .dedupe import WINDOW_DAYS, find_duplicate, listing_record
-from .formatting import (SOURCE_NAMES, TZ, build_info, build_post, tiktok_caption, tiktok_title, ts_local,
-                         utf16_len)
+from .formatting import SOURCE_NAMES, TZ, build_info, build_post, tiktok_caption, tiktok_title, ts_local
 from .runtime import EXIT_CONFIG, Runtime, sd_notify
 from .schedule import current_or_next_slot, next_slot, skipped_slots
 from .settings import Settings
@@ -76,28 +75,22 @@ def make_parsers(names, runtime: Runtime) -> dict:
     return out
 
 
-def kb_post(post_id: int, bl_id: Optional[int] = None) -> dict:
-    second = ({"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
-              else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"})
-    return {"inline_keyboard": [[{"text": "🎬 Згенерувати", "callback_data": f"g:{post_id}"}, second]]}
-
-
-def kb_publish(post_id: int, channel: bool, tiktok: bool, done_tg: bool = False, done_tt: bool = False) -> Optional[dict]:
-    """Buttons under the generated TikTok text. Pressed ones turn into ✅ (pressing again only reminds)."""
+def kb_post(post_id: int, bl_id: Optional[int] = None, tiktok: bool = False, tiktok_done: bool = False) -> dict:
+    """Buttons under the offer card. The TikTok one (only when configured) turns into ✅ once the draft is sent."""
     row = []
-    if channel:
-        row.append({"text": "✅ В каналі" if done_tg else "📢 В канал", "callback_data": f"c:{post_id}"})
     if tiktok:
-        row.append({"text": "✅ Чернетка TikTok" if done_tt else "🎵 В чернетки TikTok", "callback_data": f"t:{post_id}"})
-    return {"inline_keyboard": [row]} if row else None
+        row.append({"text": "✅ В TikTok" if tiktok_done else "🎵 В TikTok", "callback_data": f"t:{post_id}"})
+    row.append({"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
+               else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"})
+    return {"inline_keyboard": [row]}
 
 
 HELP = ("Я стежу за OLX і Otodom: нові квартири в оренду у Вроцлаві від власників (1–3 кімнати). "
         "Кожне нове оголошення надсилаю один раз: фото + готовий пост.\n\n"
         "Кнопки під оголошенням:\n"
-        "🎬 Згенерувати: слайди для TikTok файлами + готовий текст, під ним кнопки "
-        "📢 В канал і 🎵 В чернетки TikTok\n"
+        "🎵 В TikTok: слайди й текст одразу йдуть у чернетки TikTok (кнопка стає ✅)\n"
         "🏢 Посередник: більше не показувати цього продавця (можна скасувати)\n\n"
+        "У Telegram-канал нові оголошення йдуть самі (крім можливих дублів).\n\n"
         "Команди:\n"
         "/status: стан перевірок і статистика\n"
         "/pause: призупинити надсилання\n"
@@ -362,6 +355,16 @@ class Bot:
         self.db.upsert_listing(rec)
         self.db.mark_seen(l.source, [l.source_id])
         self.db.incr("sent_total")
+        if self.s.channel_autopost and self.s.channel_id and not dup_info:      # possible duplicates stay manual
+            try:
+                self.publish_channel(post_id, chat, None, auto=True)
+            except Exception as e:                                           # the offer is already in the chat
+                log.warning("auto-post of post #%d to the channel failed: %s", post_id, e)
+                try:
+                    self.tg.send_message(chat, f"⚠️ Не вдалося опублікувати в канал: {type(e).__name__}",
+                                         html=False, reply_markup=self._retry_channel_kb(post_id))
+                except TgError:
+                    pass
         return "sent"
 
     def _dhash_of(self, row: dict) -> Optional[str]:
@@ -424,7 +427,7 @@ class Bot:
                 text_id = self._send_text(chat, post)["message_id"]
                 self.db.update_post(post_id, text_msg_id=text_id)
             info = build_info(l, dup_info)
-            m = self.tg.send_message(chat, info, reply_markup=kb_post(post_id), silent=True,
+            m = self.tg.send_message(chat, info, reply_markup=self._kb_post(post_id), silent=True,
                                      reply_to=dup_post["info_msg_id"] if dup_post else None)
             self.db.update_post(post_id, info_msg_id=m["message_id"], status="sent")
             log.info("Sent %s as post #%d (%d photos)%s", key, post_id, len(album_ids),
@@ -603,7 +606,7 @@ class Bot:
                 try:
                     lst = Listing.from_dict(json.loads(post["listing_json"]))
                     self.tg.edit_message_text(post["chat_id"], post["info_msg_id"], build_info(lst, self._dup_info(post)),
-                                              kb_post(post["id"]))
+                                              self._kb_post(post["id"]))
                 except TgError as e:
                     log.info("could not edit post card after unblock: %s", e)
         return row
@@ -632,7 +635,9 @@ class Bot:
         except ValueError:
             self.tg.answer_callback(cid)
             return
-        if kind in ("g", "c", "t"):
+        if kind == "g":                    # the old "Згенерувати" button now sends the draft to TikTok at once
+            kind = "t"
+        if kind in ("c", "t"):
             post = self.db.get_post(num)
             if not post:
                 self.tg.answer_callback(cid, "Оголошення вже немає в базі", alert=True)
@@ -649,8 +654,7 @@ class Bot:
                     return
                 self.jobs_active.add((kind, num))
             self.jobs.put((kind, num, chat_id, msg.get("message_id")))
-            self.tg.answer_callback(cid, {"g": "🎬 Генерую слайди…", "c": "📢 Публікую в канал…",
-                                          "t": "🎵 Відправляю в TikTok…"}[kind])
+            self.tg.answer_callback(cid, {"c": "📢 Публікую в канал…", "t": "🎵 Відправляю в TikTok…"}[kind])
         elif kind == "b":
             post = self.db.get_post(num)
             if not post:
@@ -662,7 +666,7 @@ class Bot:
                 lst.source, lst.seller_id, lst.seller_name, text_fingerprint(lst.title, lst.description_text), num)
             try:
                 self.tg.edit_message_text(chat_id, msg["message_id"], build_info(lst, self._dup_info(post), True),
-                                          kb_post(num, bl_id))
+                                          self._kb_post(num))
             except TgError as e:
                 log.info("edit after blacklist failed: %s", e)
             self.tg.answer_callback(cid, f"🏢 {lst.seller_name or 'Продавця'} позначено як посередника")
@@ -689,11 +693,9 @@ class Bot:
                 kind, post_id, chat_id, msg_id = self.jobs.get(timeout=5)
             except queue.Empty:
                 continue
-            what = {"g": "згенерувати слайди", "c": "опублікувати в канал", "t": "відправити в TikTok"}[kind]
+            what = {"c": "опублікувати в канал", "t": "відправити в TikTok"}[kind]
             try:
-                if kind == "g":
-                    self.generate(post_id, chat_id)
-                elif kind == "c":
+                if kind == "c":
                     self.publish_channel(post_id, chat_id, msg_id)
                 else:
                     self.push_tiktok(post_id, chat_id, msg_id)
@@ -708,54 +710,30 @@ class Bot:
                 with self._jobs_lock:
                     self.jobs_active.discard((kind, post_id))
 
-    def generate(self, post_id: int, chat_id: int) -> list:
-        name = threading.current_thread().name
-        post = self.db.get_post(post_id)
-        lst = Listing.from_dict(json.loads(post["listing_json"]))
-        out_dir = os.path.join(self.s.tmp_dir, f"gen_{post_id}_{int(time.time())}")
-        try:
-            paths = slides.generate(lst, out_dir, self.s.max_slides, beat=lambda: self.rt.beat(name))
-            reply = post.get("info_msg_id")
-            items = []
-            for p in paths:
-                with open(p, "rb") as f:
-                    items.append((f"{lst.source}_{lst.source_id}_{p.name}", f.read(), "image/jpeg"))
-            if len(items) >= 2:
-                try:
-                    self.tg.send_media_group(chat_id, items, kind="document")
-                except TgError as e:
-                    if not e.permanent:
-                        raise
-                    log.warning("Document album rejected (%s), sending one by one", e)
-                    for fn, data, mime in items:
-                        self.tg.send_document(chat_id, fn, data, mime)
-            else:
-                self.tg.send_document(chat_id, *items[0])
-            del items
-            cap = tiktok_caption(lst, footer=self.s.post_footer)
-            self.tg.send_message(chat_id, cap, html=False, reply_to=reply,
-                                 reply_markup=self._kb_publish(post_id))
-            log.info("Generated %d slides for post #%d (caption %d chars)", len(paths), post_id, utf16_len(cap))
-            return paths
-        finally:
-            shutil.rmtree(out_dir, ignore_errors=True)
-
     # ================================================================== publishing
-    def _kb_publish(self, post_id: int) -> Optional[dict]:
-        return kb_publish(post_id, bool(self.s.channel_id), bool(self.sink),
-                          bool(self.db.get(f"published_tg:{post_id}")), bool(self.db.get(f"published_tt:{post_id}")))
+    def _kb_post(self, post_id: int) -> dict:
+        bl = self.db.active_blacklist_for_post(post_id)
+        return kb_post(post_id, bl["id"] if bl else None, bool(self.sink),
+                       bool(self.db.get(f"published_tt:{post_id}")))
 
-    def _refresh_publish_kb(self, chat_id: int, msg_id: Optional[int], post_id: int):
-        if not msg_id:
+    def _refresh_card(self, post_id: int):
+        """Redraw the buttons of the offer card (always the card, whichever old message was pressed)."""
+        post = self.db.get_post(post_id)
+        if not post or not post.get("info_msg_id"):
             return
         try:
-            self.tg.call("editMessageReplyMarkup", {"chat_id": chat_id, "message_id": msg_id,
-                                                    "reply_markup": self._kb_publish(post_id)}, tries=2)
+            self.tg.call("editMessageReplyMarkup", {"chat_id": post["chat_id"], "message_id": post["info_msg_id"],
+                                                    "reply_markup": self._kb_post(post_id)}, tries=2)
         except TgError as e:
-            log.info("could not update publish buttons: %s", e)
+            log.info("could not update card buttons: %s", e)
 
-    def publish_channel(self, post_id: int, chat_id: int, msg_id: Optional[int]):
-        """Album + post (the same text as in the bot chat) to TELEGRAM_CHANNEL_ID."""
+    @staticmethod
+    def _retry_channel_kb(post_id: int) -> dict:
+        return {"inline_keyboard": [[{"text": "📢 Повторити в канал", "callback_data": f"c:{post_id}"}]]}
+
+    def publish_channel(self, post_id: int, chat_id: int, msg_id: Optional[int], auto: bool = False):
+        """Album + post (the same text as in the bot chat) to TELEGRAM_CHANNEL_ID. auto = posted by the bot itself,
+        no 'published' reply in the chat (a failure is still reported)."""
         if not self.s.channel_id:
             self.tg.send_message(chat_id, "⚠️ Канал не налаштовано (TELEGRAM_CHANNEL_ID).", html=False)
             return
@@ -773,12 +751,13 @@ class Bot:
                     if e.permanent and ("chat not found" in e.description or "rights" in e.description
                                         or "forbidden" in e.description.lower()) else "")
             self.tg.send_message(chat_id, f"⚠️ Не вдалося опублікувати в канал: {e.description}.{hint}",
-                                 html=False, reply_to=msg_id)
+                                 html=False, reply_to=post.get("info_msg_id") if auto else msg_id,
+                                 reply_markup=self._retry_channel_kb(post_id) if auto else None)
             return
         self.db.set(f"published_tg:{post_id}", time.time())
         log.info("Post #%d published to channel %s (%d photos)", post_id, self.s.channel_id, len(ids))
-        self._refresh_publish_kb(chat_id, msg_id, post_id)
-        self.tg.send_message(chat_id, "✅ Опубліковано в канал.", html=False, reply_to=msg_id, silent=True)
+        if not auto:
+            self.tg.send_message(chat_id, "✅ Опубліковано в канал.", html=False, reply_to=msg_id, silent=True)
 
     def push_tiktok(self, post_id: int, chat_id: int, msg_id: Optional[int]):
         """Slides (generated again, same result) + post text -> TikTok draft through tiktok-connect."""
@@ -801,7 +780,7 @@ class Bot:
             shutil.rmtree(out_dir, ignore_errors=True)
         self.db.set(f"published_tt:{post_id}", time.time())
         log.info("Post #%d sent to TikTok drafts (%s, %d slides)", post_id, status, len(paths))
-        self._refresh_publish_kb(chat_id, msg_id, post_id)
+        self._refresh_card(post_id)
         note = ("" if status in ("SEND_TO_USER_INBOX", "PUBLISH_COMPLETE")
                 else f" (TikTok ще обробляє: {status}, зазвичай з'являється за хвилину)")
         self.tg.send_message(chat_id, "✅ Чернетка в TikTok: вхідні → системні сповіщення → додай музику й "
@@ -853,6 +832,8 @@ class Bot:
         sd_notify("READY=1")
         log.info("Started v%s: sources=%s interval=%ss data=%s owner=%s", __version__, ",".join(self.s.sources),
                  self.s.interval_s, self.s.data_dir, self.owner_chat())
+        if self.s.channel_autopost and not self.s.channel_id:
+            log.warning("CHANNEL_AUTOPOST=true but TELEGRAM_CHANNEL_ID is empty: nothing will go to the channel")
         try:
             self.poller_loop()
         finally:
