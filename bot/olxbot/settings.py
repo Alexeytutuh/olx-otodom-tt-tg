@@ -50,7 +50,7 @@ class Settings:
     max_album_photos: int = 10
     max_slides: int = 10
     startup_summary: bool = True
-    tiktok_connect_enabled: bool = False      # "🎵 В TikTok" button (draft at once), see olxbot/tiktok_hook.py
+    tiktok_connect_enabled: bool = False      # "🎵 TikTok" buttons (draft at once), see olxbot/tiktok_hook.py
     tiktok_connect_url: str = ""
     tiktok_connect_token: str = ""            # = INTERNAL_TOKEN of tiktok-connect
     channel_id: str = ""                      # channel for CHANNEL_AUTOPOST: -100... or @username

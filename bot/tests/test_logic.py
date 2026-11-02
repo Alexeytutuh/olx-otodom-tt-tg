@@ -300,7 +300,7 @@ class BotFlows(unittest.TestCase):
     def card(self, key):
         """(post row, texts of the buttons the bot would draw on its offer card now)."""
         post = self.bot.db.post_for_listing(key)
-        return post, [b["text"] for b in self.bot._kb_post(post["id"])["inline_keyboard"][0]]
+        return post, [b["text"] for row in self.bot._kb_post(post["id"])["inline_keyboard"] for b in row]
 
     def press(self, data, message_id, cid="p"):
         self.bot.handle_callback({"id": cid, "data": data, "message": {"message_id": message_id,
@@ -317,10 +317,10 @@ class BotFlows(unittest.TestCase):
         self.assertNotIn("ідеальн", ch[0]["params"]["media"][0]["caption"])       # no "ideal for ..." line in Telegram
         post, kb = self.card("olx:50")
         self.assertTrue(self.bot.db.get(f"published_tg:{post['id']}"))
-        self.assertEqual(kb, ["🎵 В TikTok", "🏢 Посередник"])                    # no channel button any more
+        self.assertEqual(kb, ["🎵 TikTok розмите", "🎵 TikTok чітке", "🏢 Посередник"])                    # no channel button any more
         sent = [c for c in calls(self.st, "sendMessage") if c["params"].get("reply_markup")][-1]
-        self.assertEqual([b["callback_data"] for b in sent["params"]["reply_markup"]["inline_keyboard"][0]],
-                         [f"t:{post['id']}", f"b:{post['id']}"])
+        self.assertEqual([b["callback_data"] for row in sent["params"]["reply_markup"]["inline_keyboard"] for b in row],
+                         [f"s:{post['id']}", f"t:{post['id']}", f"b:{post['id']}"])
         self.assertFalse([c for c in calls(self.st, "sendMessage") if "Опубліковано в канал" in c["params"]["text"]])
 
     def test_autopost_off_by_default(self):
@@ -341,7 +341,7 @@ class BotFlows(unittest.TestCase):
         self.assertTrue([c for c in calls(self.st, "sendMessage") if "Можливий дубль" in c["params"]["text"]])
         self.assertEqual(len(self.channel_calls()), 1)                            # the possible duplicate is not
         post, kb = self.card("olx:12")
-        self.assertEqual(kb, ["🎵 В TikTok", "🏢 Посередник"])                    # TikTok still possible
+        self.assertEqual(kb, ["🎵 TikTok розмите", "🎵 TikTok чітке", "🏢 Посередник"])                    # TikTok still possible
         self.assertFalse(self.bot.db.get(f"published_tg:{post['id']}"))
 
     def test_autopost_failure_does_not_lose_the_offer(self):
@@ -394,7 +394,7 @@ class BotFlows(unittest.TestCase):
         self.bot.handle_callback(cq)
         edit = calls(self.st, "editMessageText")[-1]["params"]
         self.assertIn("Позначено як посередника", edit["text"])
-        undo = edit["reply_markup"]["inline_keyboard"][0][-1]
+        undo = edit["reply_markup"]["inline_keyboard"][-1][-1]
         self.assertTrue(undo["callback_data"].startswith("u:"))
         self.assertEqual(len(self.bot.db.blacklist_entries()), 1)
         # same seller, new listing -> skipped; same text from another account on Otodom -> skipped
@@ -412,7 +412,7 @@ class BotFlows(unittest.TestCase):
         self.assertEqual(len(self.bot.db.blacklist_entries()), 0)
         last = calls(self.st, "editMessageText")[-1]["params"]
         self.assertNotIn("Позначено", last["text"])
-        self.assertEqual(last["reply_markup"]["inline_keyboard"][0][-1]["text"], "🏢 Посередник")
+        self.assertEqual(last["reply_markup"]["inline_keyboard"][-1][-1]["text"], "🏢 Посередник")
         self.olx().batches.append([listing("23", seller_id="S1", description_text="Jeszcze inny " * 20,
                                            area_m2=44.0)])
         self.bot.run_source("olx")
@@ -435,7 +435,7 @@ class BotFlows(unittest.TestCase):
         self.olx().batches.append([self.unique("40", photos=photos, description_text="Mieszkanie z balkonem. " * 5)])
         self.bot.run_source("olx")
         post, kb = self.card("olx:40")
-        self.assertEqual(kb, ["🎵 В TikTok", "🏢 Посередник"])
+        self.assertEqual(kb, ["🎵 TikTok розмите", "🎵 TikTok чітке", "🏢 Посередник"])
         self.assertEqual(len(calls(self.st, "sendMediaGroup")[0]["params"]["media"]), 10)    # offer album, broken skipped
         n_msgs = len(calls(self.st, "sendMessage"))
         # TikTok refuses first: a readable message, the button stays as it was
@@ -457,7 +457,7 @@ class BotFlows(unittest.TestCase):
         self.assertIn("Чернетка в TikTok", calls(self.st, "sendMessage")[-1]["params"]["text"])
         edit = calls(self.st, "editMessageReplyMarkup")[-1]["params"]
         self.assertEqual(edit["message_id"], post["info_msg_id"])
-        self.assertEqual([b["text"] for b in edit["reply_markup"]["inline_keyboard"][0]], ["✅ В TikTok", "🏢 Посередник"])
+        self.assertEqual([b["text"] for row in edit["reply_markup"]["inline_keyboard"] for b in row], ["✅ В TikTok", "🏢 Посередник"])
         # nothing but the confirmation went to the chat: no slide files, no caption preview
         self.assertFalse([c for c in calls(self.st, "sendMediaGroup") if c["params"]["media"][0]["type"] == "document"])
         self.assertFalse([c for c in calls(self.st, "sendMessage")[n_msgs:] if "#wroclaw" in c["params"]["text"]])
@@ -487,6 +487,29 @@ class BotFlows(unittest.TestCase):
         self.assertIn("вже в TikTok", self.press(f"g:{post['id']}", post["info_msg_id"], "g2"))   # old button, done
         self.assertTrue(self.bot.jobs.empty())
 
+    def test_tiktok_blurred_and_sharp_buttons(self):
+        self.autopost_setup(on=False)
+        self.olx().batches.append([self.unique("35"), self.unique("36")])
+        self.bot.run_source("olx")
+        blurred = self.bot.db.post_for_listing("olx:35")
+        sharp = self.bot.db.post_for_listing("olx:36")
+        self.press(f"s:{blurred['id']}", blurred["info_msg_id"], "s1")
+        self.press(f"t:{sharp['id']}", sharp["info_msg_id"], "t1")
+        self.assertEqual(self.bot.jobs.get_nowait(), ("t", blurred["id"], OWNER, blurred["info_msg_id"], True))
+        self.assertEqual(self.bot.jobs.get_nowait(), ("t", sharp["id"], OWNER, sharp["info_msg_id"], False))
+        # the blurred button always gives cover B
+        from olxbot import slides
+        seen = []
+        real = slides.generate
+        slides.generate = lambda *a, **kw: seen.append(kw["style"]) or real(*a, **kw)
+        try:
+            self.bot.push_tiktok(blurred["id"], OWNER, blurred["info_msg_id"], blur=True)
+            self.bot.push_tiktok(sharp["id"], OWNER, sharp["info_msg_id"])
+        finally:
+            slides.generate = real
+        self.assertEqual(seen[0], "B")
+        self.assertIn(seen[1], ("A", "C", "D"))
+
     def test_tiktok_redraws_the_card_not_the_pressed_message(self):
         self.autopost_setup(on=False)
         self.olx().batches.append([self.unique("33")])
@@ -504,15 +527,15 @@ class BotFlows(unittest.TestCase):
         post = self.bot.db.post_for_listing("olx:34")
         self.bot.push_tiktok(post["id"], OWNER, post["info_msg_id"])
         self.press(f"b:{post['id']}", post["info_msg_id"])
-        kb = calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"][0]
+        kb = sum(calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"], [])
         self.assertEqual([b["text"] for b in kb], ["✅ В TikTok", "↩️ Не посередник"])
         self.press(kb[1]["callback_data"], post["info_msg_id"])
-        kb = calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"][0]
+        kb = sum(calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"], [])
         self.assertEqual([b["text"] for b in kb], ["✅ В TikTok", "🏢 Посередник"])
         self.press(f"b:{post['id']}", post["info_msg_id"])
         bl = self.bot.db.blacklist_entries()[0]["id"]
         self.bot.handle_message({"chat": {"id": OWNER}, "text": f"/unblock {bl}"})            # the command path
-        kb = calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"][0]
+        kb = sum(calls(self.st, "editMessageText")[-1]["params"]["reply_markup"]["inline_keyboard"], [])
         self.assertEqual([b["text"] for b in kb], ["✅ В TikTok", "🏢 Посередник"])
 
     def test_tiktok_not_configured(self):

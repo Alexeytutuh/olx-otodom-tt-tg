@@ -76,19 +76,23 @@ def make_parsers(names, runtime: Runtime) -> dict:
 
 
 def kb_post(post_id: int, bl_id: Optional[int] = None, tiktok: bool = False, tiktok_done: bool = False) -> dict:
-    """Buttons under the offer card. The TikTok one (only when configured) turns into ✅ once the draft is sent."""
-    row = []
+    """Buttons under the offer card. The two TikTok ones (blurred / sharp cover, only when configured) turn into
+    one ✅ once the draft is sent."""
+    rows = []
     if tiktok:
-        row.append({"text": "✅ В TikTok" if tiktok_done else "🎵 В TikTok", "callback_data": f"t:{post_id}"})
-    row.append({"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
-               else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"})
-    return {"inline_keyboard": [row]}
+        rows.append([{"text": "✅ В TikTok", "callback_data": f"t:{post_id}"}] if tiktok_done
+                    else [{"text": "🎵 TikTok розмите", "callback_data": f"s:{post_id}"},
+                          {"text": "🎵 TikTok чітке", "callback_data": f"t:{post_id}"}])
+    rows.append([{"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
+                 else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"}])
+    return {"inline_keyboard": rows}
 
 
 HELP = ("Я стежу за OLX і Otodom: нові квартири в оренду у Вроцлаві від власників (1–3 кімнати). "
         "Кожне нове оголошення надсилаю один раз: фото + готовий пост.\n\n"
         "Кнопки під оголошенням:\n"
-        "🎵 В TikTok: слайди й текст одразу йдуть у чернетки TikTok (кнопка стає ✅)\n"
+        "🎵 TikTok розмите / чітке: слайди й текст одразу йдуть у чернетки TikTok, перше фото розмите або "
+        "чітке (кнопка стає ✅)\n"
         "🏢 Посередник: більше не показувати цього продавця (можна скасувати)\n\n"
         "У Telegram-канал нові оголошення йдуть самі (крім можливих дублів).\n\n"
         "Команди:\n"
@@ -119,7 +123,7 @@ class Bot:
         self.alerts = {n: AlertState.from_dict(n, self.db.load_health(n).get("alert", {}), settings.alert_after,
                                                realert) for n in list(settings.sources) + ["telegram", "internal"]}
         self.skip_until: dict[str, float] = {}
-        self.jobs: "queue.Queue[tuple[str, int, int, Optional[int]]]" = queue.Queue()   # (kind, post, chat, msg)
+        self.jobs: "queue.Queue[tuple[str, int, int, Optional[int], bool]]" = queue.Queue()  # (kind, post, chat, msg, blur)
         self.jobs_active: set[tuple[str, int]] = set()
         self._jobs_lock = threading.Lock()
         self._notices: list[tuple[str, int]] = []
@@ -635,7 +639,8 @@ class Bot:
         except ValueError:
             self.tg.answer_callback(cid)
             return
-        if kind == "g":                    # the old "Згенерувати" button now sends the draft to TikTok at once
+        blur = kind == "s"                 # s: TikTok with a blurred cover, t: sharp
+        if kind in ("g", "s"):             # the old "Згенерувати" button now sends the draft to TikTok at once (sharp)
             kind = "t"
         if kind in ("c", "t"):
             post = self.db.get_post(num)
@@ -653,7 +658,7 @@ class Bot:
                     self.tg.answer_callback(cid, "Вже виконую, зачекай…")
                     return
                 self.jobs_active.add((kind, num))
-            self.jobs.put((kind, num, chat_id, msg.get("message_id")))
+            self.jobs.put((kind, num, chat_id, msg.get("message_id"), blur))
             self.tg.answer_callback(cid, {"c": "📢 Публікую в канал…", "t": "🎵 Відправляю в TikTok…"}[kind])
         elif kind == "b":
             post = self.db.get_post(num)
@@ -690,7 +695,7 @@ class Bot:
         while not self.rt.stop.is_set():
             self.rt.beat(name)
             try:
-                kind, post_id, chat_id, msg_id = self.jobs.get(timeout=5)
+                kind, post_id, chat_id, msg_id, blur = self.jobs.get(timeout=5)
             except queue.Empty:
                 continue
             what = {"c": "опублікувати в канал", "t": "відправити в TikTok"}[kind]
@@ -698,7 +703,7 @@ class Bot:
                 if kind == "c":
                     self.publish_channel(post_id, chat_id, msg_id)
                 else:
-                    self.push_tiktok(post_id, chat_id, msg_id)
+                    self.push_tiktok(post_id, chat_id, msg_id, blur)
             except Exception as e:
                 log.exception("Job %s for post %s failed: %s", kind, post_id, e)
                 try:
@@ -759,8 +764,8 @@ class Bot:
         if not auto:
             self.tg.send_message(chat_id, "✅ Опубліковано в канал.", html=False, reply_to=msg_id, silent=True)
 
-    def push_tiktok(self, post_id: int, chat_id: int, msg_id: Optional[int]):
-        """Slides (generated again, same result) + post text -> TikTok draft through tiktok-connect."""
+    def push_tiktok(self, post_id: int, chat_id: int, msg_id: Optional[int], blur: bool = False):
+        """Slides (blurred or sharp cover) + post text -> TikTok draft through tiktok-connect."""
         if not self.sink:
             self.tg.send_message(chat_id, "⚠️ TikTok не налаштовано (TIKTOK_CONNECT_*).", html=False)
             return
@@ -769,7 +774,8 @@ class Bot:
         lst = Listing.from_dict(json.loads(post["listing_json"]))
         out_dir = os.path.join(self.s.tmp_dir, f"tt_{post_id}_{int(time.time())}")
         try:
-            paths = slides.generate(lst, out_dir, self.s.max_slides, beat=lambda: self.rt.beat(name))
+            paths = slides.generate(lst, out_dir, self.s.max_slides, beat=lambda: self.rt.beat(name),
+                                    style=slides.pick_style(lst, blur))
             try:
                 status = self.sink.push_draft(paths, tiktok_title(lst), tiktok_caption(lst, footer=self.s.post_footer))
             except DraftError as e:

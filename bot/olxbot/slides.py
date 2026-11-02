@@ -1,8 +1,8 @@
 """TikTok carousel slides (1080x1920 JPEG) with Pillow. Independent of Telegram: give it a Listing and a
 folder, get back JPEG paths. One photo is decoded at a time (JPEG draft mode), so peak memory stays low.
 
-Slide 1 (cover) comes in four looks, picked per listing (the same listing always gets the same one, because the
-slides are generated again when the draft goes to TikTok):
+Slide 1 (cover) comes in four looks. The realtor picks blurred (always B) or sharp (A, C or D, picked per listing:
+the same listing always gets the same one):
   A  first photo cover-cropped to 9:16 + two orange translucent plates in TikTok's "text with background" style:
      top '<type> | <m²> | Wrocław (district)', bottom = what is special about the flat (or the district)
   B  the photo blurred over the whole frame + a big white plate (city, type, price) + a white plate with the highlight
@@ -55,11 +55,14 @@ WHITE_SMALL = {**WHITE, "font_size": 76, "pad_y": 20}
 PIN_RGB = (226, 52, 52)
 
 STYLES = ("A", "B", "C", "D")
+SHARP_STYLES = ("A", "C", "D")
 
 
-def pick_style(lst: Listing) -> str:
-    """Deterministic: the same listing always gets the same cover."""
-    return STYLES[zlib.crc32(lst.dedupe_key.encode()) % len(STYLES)]
+def pick_style(lst: Listing, blur: bool = False) -> str:
+    """Blurred = B. Sharp: deterministic, the same listing always gets the same cover."""
+    if blur:
+        return "B"
+    return SHARP_STYLES[zlib.crc32(lst.dedupe_key.encode()) % len(SHARP_STYLES)]
 
 
 def _font(size: int) -> ImageFont.FreeTypeFont:
@@ -233,7 +236,7 @@ def generate(lst: Listing, out_dir: str | Path, max_slides: int = 10,
              fetch: Callable[[str], bytes] = None, beat: Callable[[], None] = None,
              style: Optional[str] = None) -> list[Path]:
     """Download photos one by one and write slide_01.jpg ... into out_dir. Returns the paths in order.
-    style: cover look 'A'..'D'; None = picked from the listing."""
+    style: cover look 'A'..'D'; None = a sharp one picked from the listing."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     fetch = fetch or (lambda u: images.download(u, beat=beat))

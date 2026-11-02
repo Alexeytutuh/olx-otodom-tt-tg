@@ -251,7 +251,8 @@ class HighlightsHashtagsSlides(unittest.TestCase):
         from PIL import Image
         from olxbot import slides
         from tests.helpers import fake_download
-        self.assertEqual({slides.pick_style(listing(str(i))) for i in range(200)}, set(slides.STYLES))
+        self.assertEqual({slides.pick_style(listing(str(i))) for i in range(200)}, {"A", "C", "D"})       # sharp
+        self.assertEqual({slides.pick_style(listing(str(i)), blur=True) for i in range(20)}, {"B"})
         l = listing("9", rooms=3, area_m2=60.0, district="Krzyki", description_text="Taras, klimatyzacja, tramwaj.")
         self.assertEqual(slides.pick_style(l), slides.pick_style(l))                 # same flat, same cover
         with tempfile.TemporaryDirectory() as tmp:

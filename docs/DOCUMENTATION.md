@@ -59,7 +59,7 @@
                                     │    │
                                     │    └── автопублікація (CHANNEL_AUTOPOST) ──► Telegram-канал (альбом + пост)
                                     │
-                                    └── кнопка «🎵 В TikTok»
+                                    └── кнопки «🎵 TikTok розмите / чітке»
                                          POST http://tiktok-connect:8090/internal/draft
                                          (мережа n8n_default, Bearer-токен)
                                                 │
@@ -207,6 +207,7 @@ Caddyfile `Caddyfile.bak-20261010-181704`, новий код, `docker compose up
 | Прибрано проміжний крок: слайди файлами й прев'ю тексту TikTok у чат більше не приходять. Під карткою оферти кнопка **🎵 В TikTok** одразу відправляє чернетку (слайди бот робить сам), після успіху стає **✅ В TikTok**; помилки TikTok показуються як раніше | `app.kb_post`, `_kb_post`, `_refresh_card`, `push_tiktok` |
 | Сумісність зі старими повідомленнями в чаті: старі кнопки `g:` («Згенерувати») працюють як `t:`, `c:` («В канал») як і раніше; картку завжди перемальовує `info_msg_id`, а не натиснуте повідомлення | `app.handle_callback` |
 | Незручність, яку варто знати: при помилці TikTok запасного варіанта «залити слайди вручну» більше немає (слайдів у чаті нема) | — |
+| 02.11: замість однієї кнопки TikTok дві — **🎵 TikTok розмите** (`s:`, обкладинка завжди B) і **🎵 TikTok чітке** (`t:`, A/C/D за `crc32 % 3`); Посередник — окремим рядком. Старі `t:`/`g:` = чітке | `app.kb_post`, `handle_callback`, `push_tiktok(blur)`, `slides.pick_style(lst, blur)` |
 
 Увімкнення: у `/opt/olx-tiktok-bot/.env` рядок `CHANNEL_AUTOPOST=true`, потім `docker compose up -d --force-recreate`.
 `/pause` зупиняє й автопублікацію. Відкат: `CHANNEL_AUTOPOST=false` (або видалити рядок) і той самий перезапуск.
@@ -278,7 +279,7 @@ ssh your-vps 'docker run --rm --network none -v /opt/tiktok-connect:/app:ro -w /
 
 ### Команди бота в Telegram
 
-`/status`, `/pause`, `/resume`, `/blacklist`, `/unblock N`. Під офертою: **🎵 В TikTok** (чернетка одразу,
+`/status`, `/pause`, `/resume`, `/blacklist`, `/unblock N`. Під офертою: **🎵 TikTok розмите** / **🎵 TikTok чітке** (чернетка одразу,
 далі ✅) і **🏢 Посередник**. У канал нові оголошення йдуть самі (`CHANNEL_AUTOPOST=true`).
 
 ---

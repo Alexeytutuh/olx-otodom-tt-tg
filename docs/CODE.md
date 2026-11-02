@@ -51,14 +51,14 @@ olx-tiktok/
    Парсер повертає нові оголошення → фільтр чорного списку → `find_duplicate` → `send_post`.
    Перший прогін «тихий»: усе поточне позначається баченим.
 2. **`send_post`**: альбом до 10 фото + пост (`build_post`, HTML) у підписі або окремим повідомленням,
-   далі картка (`build_info`) з кнопками `🎵 В TikTok` / `🏢 Посередник` (`_kb_post`; TikTok-кнопка лише якщо налаштовано).
-3. **Кнопки (`handle_callback`)**: `t:` у TikTok (старе `g:` перетворюється на `t:`), `c:` у канал (лише старі
+   далі картка (`build_info`) з кнопками `🎵 TikTok розмите` / `🎵 TikTok чітке` / `🏢 Посередник` (`_kb_post`; TikTok-кнопка лише якщо налаштовано).
+3. **Кнопки (`handle_callback`)**: `s:` у TikTok з розмитою обкладинкою, `t:` з чіткою (старе `g:` = `t:`), `c:` у канал (лише старі
    повідомлення й «Повторити в канал»), `b:`/`u:`/`r:` чорний список. `c` і `t` ставляться в чергу `jobs`
    (ключ `(вид, post_id)`) і виконуються потоком `generator` по одній.
 4. **`publish_channel`**: альбом + той самий пост у `TELEGRAM_CHANNEL_ID`; позначка `published_tg:<id>` у `meta`.
    При `CHANNEL_AUTOPOST=true` його викликає сам `handle_listing` одразу після надсилання оферти в чат
    (крім можливих дублів). Помилка автопублікації → попередження в чат із кнопкою «Повторити в канал» (`c:`).
-5. **`push_tiktok`** (кнопка «🎵 В TikTok» одразу, без прев'ю): слайди генеруються й не показуються в чаті →
+5. **`push_tiktok`** (кнопки «🎵 TikTok розмите / чітке» одразу, без прев'ю): слайди генеруються й не показуються в чаті →
    `TikTokConnectClient.push_draft` → `POST /internal/draft` → `drafts.create_draft` → TikTok `content/init` +
    опитування статусу; позначка `published_tt:<id>`; картку перемальовує `_refresh_card` (завжди за `info_msg_id`).
 
@@ -74,13 +74,16 @@ olx-tiktok/
 
 ```python
 def kb_post(post_id: int, bl_id: Optional[int] = None, tiktok: bool = False, tiktok_done: bool = False) -> dict:
-    """Buttons under the offer card. The TikTok one (only when configured) turns into ✅ once the draft is sent."""
-    row = []
+    """Buttons under the offer card. The two TikTok ones (blurred / sharp cover, only when configured) turn into
+    one ✅ once the draft is sent."""
+    rows = []
     if tiktok:
-        row.append({"text": "✅ В TikTok" if tiktok_done else "🎵 В TikTok", "callback_data": f"t:{post_id}"})
-    row.append({"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
-               else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"})
-    return {"inline_keyboard": [row]}
+        rows.append([{"text": "✅ В TikTok", "callback_data": f"t:{post_id}"}] if tiktok_done
+                    else [{"text": "🎵 TikTok розмите", "callback_data": f"s:{post_id}"},
+                          {"text": "🎵 TikTok чітке", "callback_data": f"t:{post_id}"}])
+    rows.append([{"text": "↩️ Не посередник", "callback_data": f"u:{bl_id}"} if bl_id
+                 else {"text": "🏢 Посередник", "callback_data": f"b:{post_id}"}])
+    return {"inline_keyboard": rows}
 ```
 
 Клавіатуру картки скрізь будує `Bot._kb_post(post_id)`: вона читає з бази чорний список і `published_tt`, а наявність
@@ -108,7 +111,7 @@ def tiktok_title(lst: Listing) -> str:
 jacuzzi → taras → ogródek → nowy → remont → park → zielona → cicha → tramwaj → klima → balkon → loggia → garaż → centrum).
 Тераса/балкон/садок/лоджія/гараж беруться з `detect_features`, решта — з `HIGHLIGHT_RX` (регулярки по назві й опису з
 перевіркою заперечень `_NEG`). `slide_texts(lst)` збирає все, що може надрукувати обкладинка; `hashtags(lst)` — теги.
-`slides.pick_style(lst)` = `crc32(dedupe_key) % 4` → 'A'..'D'; `generate(..., style=)` дозволяє примусово (для зразків).
+`slides.pick_style(lst, blur)`: розмите → 'B', чітке → `crc32(dedupe_key) % 3` → 'A'/'C'/'D'; `generate(..., style=)` дозволяє примусово (для зразків).
 
 ### Парковка без суми (`bot/olxbot/formatting.py`)
 
